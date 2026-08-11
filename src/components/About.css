@@ -1,0 +1,44 @@
+.about-inner {
+  display: flex;
+  align-items: center;
+  gap: 64px;
+}
+
+.about-photo {
+  flex-shrink: 0;
+}
+
+.about-photo-inner {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 48px;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+}
+
+.about-content p {
+  margin-top: 16px;
+  font-size: 16px;
+}
+
+.about-content p:first-of-type {
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .about-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 32px;
+  }
+
+  .about-content .section-title {
+    text-align: center !important;
+  }
+}
