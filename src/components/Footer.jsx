@@ -6,7 +6,7 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="container footer-inner">
-        <p>© {year} Ism Familiya. Barcha huquqlar himoyalangan.</p>
+        <p>© {year} Karimov Og'abek. Barcha huquqlar himoyalangan.</p>
         <div className="footer-links">
           <a href="https://github.com" target="_blank" rel="noreferrer">
             GitHub
