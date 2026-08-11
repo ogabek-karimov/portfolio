@@ -1,11 +1,16 @@
+import profilePhoto from '../assets/profile.jpg'
 import './About.css'
 
 function About() {
   return (
     <section id="about" className="about">
       <div className="container about-inner">
-        <div className="about-photo" aria-hidden="true">
-          <div className="about-photo-inner">IF</div>
+        <div className="about-photo">
+          <img
+            src={profilePhoto}
+            alt="Og'abek Karimov"
+            className="about-photo-inner"
+          />
         </div>
         <div className="about-content">
           <h2 className="section-title" style={{ textAlign: 'left' }}>

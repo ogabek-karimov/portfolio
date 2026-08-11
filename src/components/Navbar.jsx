@@ -15,7 +15,7 @@ function Navbar() {
     <header className="navbar">
       <div className="container navbar-inner">
         <a href="#" className="logo">
-          Ism<span>Familiya</span>
+          Og'abek<span>Karimov</span>
         </a>
 
         <nav className={`nav-links ${open ? 'open' : ''}`}>

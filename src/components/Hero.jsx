@@ -6,7 +6,7 @@ function Hero() {
       <div className="container hero-inner">
         <p className="hero-kicker">Salom, men</p>
         <h1>
-          Ism Familiya —<br />
+          Og'abek Karimov—<br />
           <span>Frontend Developer</span>
         </h1>
         <p className="hero-text">

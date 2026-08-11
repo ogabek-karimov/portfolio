@@ -12,14 +12,12 @@
   width: 220px;
   height: 220px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 48px;
-  font-weight: 700;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
   box-shadow: var(--shadow);
+  outline: 4px solid var(--bg);
+  outline-offset: -4px;
 }
 
 .about-content p {
