@@ -9,6 +9,33 @@ function isValidPhone(value) {
   return UZ_PHONE_RE.test(normalized)
 }
 
+const PHONE_PREFIX = '+998 ('
+const PHONE_TEMPLATE = '+998 (XX) XXX-XX-XX'
+
+function extractDigits(value) {
+  let digits = value.replace(/\D/g, '')
+  if (digits.startsWith('998')) digits = digits.slice(3)
+  return digits.slice(0, 9)
+}
+
+function formatPhoneDigits(digits) {
+  let result = ''
+  let di = 0
+  for (const ch of PHONE_TEMPLATE) {
+    if (ch === 'X') {
+      if (di < digits.length) {
+        result += digits[di]
+        di += 1
+      } else {
+        break
+      }
+    } else {
+      result += ch
+    }
+  }
+  return result.replace(/\s+$/, '')
+}
+
 function isGibberish(text) {
   const trimmed = text.trim()
   if (trimmed.length < 15) return true
@@ -34,12 +61,26 @@ function isGibberish(text) {
 }
 
 function Contact() {
-  const [form, setForm] = useState({ name: '', phone: '', message: '', website: '' })
+  const [form, setForm] = useState({ name: '', phone: PHONE_PREFIX, message: '', website: '' })
   const [status, setStatus] = useState('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  function handlePhoneChange(e) {
+    const raw = e.target.value
+    let digits = extractDigits(raw)
+
+    if (raw.length < form.phone.length) {
+      const prevDigits = extractDigits(form.phone)
+      if (digits.length === prevDigits.length && digits.length > 0) {
+        digits = digits.slice(0, -1)
+      }
+    }
+
+    setForm({ ...form, phone: formatPhoneDigits(digits) })
   }
 
   async function handleSubmit(e) {
@@ -75,7 +116,7 @@ function Contact() {
       }
 
       setStatus('success')
-      setForm({ name: '', phone: '', message: '', website: '' })
+      setForm({ name: '', phone: PHONE_PREFIX, message: '', website: '' })
     } catch {
       setErrorMsg("Xatolik yuz berdi, birozdan so'ng qayta urinib ko'ring.")
       setStatus('error')
@@ -108,10 +149,14 @@ function Contact() {
               <input
                 type="tel"
                 name="phone"
+                inputMode="numeric"
                 required
                 value={form.phone}
-                onChange={handleChange}
-                placeholder="+998 90 123 45 67"
+                onChange={handlePhoneChange}
+                onFocus={(e) => {
+                  const len = e.target.value.length
+                  e.target.setSelectionRange(len, len)
+                }}
               />
             </label>
           </div>
