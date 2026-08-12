@@ -17,11 +17,11 @@
 .logo {
   font-size: 20px;
   font-weight: 700;
-  color: var(--text-h);
-}
-
-.logo span {
-  color: var(--accent);
+  letter-spacing: -0.3px;
+  background: linear-gradient(135deg, var(--text-h), var(--accent) 65%, var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .nav-links {
