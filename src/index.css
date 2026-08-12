@@ -107,14 +107,23 @@ section {
   height: 100%;
   background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.45), transparent);
   transform: skewX(-20deg);
-  animation: btn-shine 3.5s ease-in-out infinite;
+  animation: bar-shine 5.5s ease-in-out infinite;
 }
 
-@keyframes btn-shine {
+@keyframes text-shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+@keyframes bar-shine {
   0% {
     left: -75%;
   }
-  40% {
+  30% {
     left: 125%;
   }
   100% {

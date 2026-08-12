@@ -31,9 +31,30 @@
 }
 
 .skill-bar-fill {
+  position: relative;
+  overflow: hidden;
   height: 100%;
   border-radius: 4px;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+.skill-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: skewX(-20deg);
+  animation: bar-shine 5.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-bar-fill::after {
+    animation: none;
+    display: none;
+  }
 }
 
 @media (max-width: 640px) {

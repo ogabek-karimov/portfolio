@@ -21,10 +21,25 @@
 }
 
 .hero h1 span {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background: linear-gradient(
+    100deg,
+    var(--accent) 20%,
+    var(--accent-2) 40%,
+    #ffffff 50%,
+    var(--accent-2) 60%,
+    var(--accent) 80%
+  );
+  background-size: 250% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: text-shine 6.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 span {
+    animation: none;
+  }
 }
 
 .hero-text {

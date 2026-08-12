@@ -30,16 +30,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: logo-shine 4s ease-in-out infinite;
-}
-
-@keyframes logo-shine {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -50% 0;
-  }
+  animation: text-shine 6.5s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
