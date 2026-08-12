@@ -1,18 +1,34 @@
 import { useState } from 'react'
 import './Contact.css'
 
+const RELAY_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
+
 function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [form, setForm] = useState({ name: '', phone: '', message: '', website: '' })
+  const [status, setStatus] = useState('idle')
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    const subject = encodeURIComponent(`Xabar: ${form.name}`)
-    const body = encodeURIComponent(`${form.message}\n\nEmail: ${form.email}`)
-    window.location.href = `mailto:sizning-emailingiz@example.com?subject=${subject}&body=${body}`
+    setStatus('sending')
+
+    try {
+      const res = await fetch(RELAY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+
+      if (!res.ok) throw new Error('Request failed')
+
+      setStatus('success')
+      setForm({ name: '', phone: '', message: '', website: '' })
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (
@@ -37,14 +53,14 @@ function Contact() {
               />
             </label>
             <label>
-              Email
+              Telefon raqam
               <input
-                type="email"
-                name="email"
+                type="tel"
+                name="phone"
                 required
-                value={form.email}
+                value={form.phone}
                 onChange={handleChange}
-                placeholder="email@example.com"
+                placeholder="+998 90 123 45 67"
               />
             </label>
           </div>
@@ -59,9 +75,27 @@ function Contact() {
               placeholder="Xabaringizni shu yerga yozing..."
             />
           </label>
-          <button type="submit" className="btn btn-primary">
-            Yuborish
+          <input
+            type="text"
+            name="website"
+            value={form.website}
+            onChange={handleChange}
+            className="hp-field"
+            tabIndex="-1"
+            autoComplete="off"
+            aria-hidden="true"
+          />
+          <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
+            {status === 'sending' ? 'Yuborilmoqda...' : 'Yuborish'}
           </button>
+          {status === 'success' && (
+            <p className="form-status success">Xabaringiz yuborildi, rahmat!</p>
+          )}
+          {status === 'error' && (
+            <p className="form-status error">
+              Xatolik yuz berdi, birozdan so'ng qayta urinib ko'ring.
+            </p>
+          )}
         </form>
       </div>
     </section>
