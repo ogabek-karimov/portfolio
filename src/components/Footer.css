@@ -19,6 +19,12 @@
   color: var(--accent);
 }
 
+.footer-link-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 @media (max-width: 600px) {
   .footer-inner {
     flex-direction: column;

@@ -18,6 +18,40 @@ function isValidField(value, maxLength) {
   return typeof value === 'string' && value.trim().length > 0 && value.length <= maxLength
 }
 
+const UZ_PHONE_RE = /^\+998\d{9}$/
+
+function isValidPhone(value) {
+  if (typeof value !== 'string') return false
+  const normalized = value.replace(/[\s()-]/g, '')
+  return UZ_PHONE_RE.test(normalized)
+}
+
+function isGibberish(text) {
+  const trimmed = text.trim()
+  if (trimmed.length < 15) return true
+  if (!/\s/.test(trimmed)) return true
+
+  const letters = trimmed.toLowerCase().replace(/[^a-zʻʼ]/g, '')
+  if (letters.length === 0) return true
+
+  const vowels = letters.match(/[aeiou]/g) || []
+  if (vowels.length / letters.length < 0.15) return true
+
+  let run = 0
+  let maxRun = 0
+  for (const ch of letters) {
+    if ('aeiou'.includes(ch)) {
+      run = 0
+    } else {
+      run += 1
+      maxRun = Math.max(maxRun, run)
+    }
+  }
+  if (maxRun >= 6) return true
+
+  return false
+}
+
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || ''
@@ -57,6 +91,20 @@ export default {
         status: 400,
         headers: { ...headers, 'Content-Type': 'application/json' },
       })
+    }
+
+    if (!isValidPhone(phone)) {
+      return new Response(
+        JSON.stringify({ error: "Telefon raqam noto'g'ri, +998XXXXXXXXX ko'rinishida kiriting" }),
+        { status: 400, headers: { ...headers, 'Content-Type': 'application/json' } },
+      )
+    }
+
+    if (isGibberish(message)) {
+      return new Response(
+        JSON.stringify({ error: "Xabar tushunarli va kamida 15 ta belgidan iborat bo'lishi kerak" }),
+        { status: 400, headers: { ...headers, 'Content-Type': 'application/json' } },
+      )
     }
 
     const text = [
