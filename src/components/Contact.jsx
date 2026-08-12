@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './Contact.css'
 
 const RELAY_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
@@ -64,6 +64,12 @@ function Contact() {
   const [form, setForm] = useState({ name: '', phone: PHONE_PREFIX, message: '', website: '' })
   const [status, setStatus] = useState('idle')
   const [errorMsg, setErrorMsg] = useState('')
+
+  useEffect(() => {
+    if (status !== 'success') return
+    const timer = setTimeout(() => setStatus('idle'), 5000)
+    return () => clearTimeout(timer)
+  }, [status])
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value })
