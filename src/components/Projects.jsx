@@ -40,7 +40,7 @@ function Projects() {
         <div className="projects-grid">
           {projects.map((project) => (
             <div className="project-card" key={project.title}>
-              <a href={project.demo} target="_blank" rel="noreferrer" className="project-thumb-link">
+              <a href={project.demo} className="project-thumb-link">
                 <img src={project.image} alt={project.title} className="project-thumb" />
               </a>
               <div className="project-body">
@@ -52,7 +52,7 @@ function Projects() {
                   ))}
                 </div>
                 <div className="project-links">
-                  <a href={project.demo} target="_blank" rel="noreferrer" className="btn btn-outline">
+                  <a href={project.demo} className="btn btn-outline">
                     Live demo
                   </a>
                   <a href={project.code} target="_blank" rel="noreferrer" className="btn btn-outline">
