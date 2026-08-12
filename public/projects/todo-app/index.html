@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do List — Mini loyiha</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <a href="../../" class="back-link">← Portfolioga qaytish</a>
+      <h1>To-Do List</h1>
+      <p class="subtitle">Vazifalaringizni qo'shing, bajarilganini belgilang</p>
+
+      <form id="todo-form" class="todo-form">
+        <input
+          type="text"
+          id="todo-input"
+          placeholder="Yangi vazifa qo'shing..."
+          autocomplete="off"
+          required
+        />
+        <button type="submit">Qo'shish</button>
+      </form>
+
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">Barchasi</button>
+        <button class="filter-btn" data-filter="active">Faol</button>
+        <button class="filter-btn" data-filter="completed">Bajarilgan</button>
+      </div>
+
+      <ul id="todo-list" class="todo-list"></ul>
+
+      <p id="empty-state" class="empty-state">Hozircha vazifalar yo'q</p>
+
+      <div class="footer-row">
+        <span id="items-left">0 ta vazifa qoldi</span>
+        <button id="clear-completed">Bajarilganlarni tozalash</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

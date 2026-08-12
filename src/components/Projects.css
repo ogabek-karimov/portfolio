@@ -17,10 +17,16 @@
   box-shadow: var(--shadow);
 }
 
+.project-thumb-link {
+  display: block;
+}
+
 .project-thumb {
-  height: 160px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  opacity: 0.85;
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  object-position: top;
 }
 
 .project-body {
@@ -52,6 +58,19 @@
   background: var(--bg-alt);
   border: 1px solid var(--border);
   color: var(--text-h);
+}
+
+.project-links {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.project-links .btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  flex: 1;
+  justify-content: center;
 }
 
 @media (max-width: 900px) {
