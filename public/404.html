@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 — Sahifa topilmadi</title>
+    <link rel="icon" type="image/svg+xml" href="/portfolio/favicon.svg" />
+    <style>
+      :root {
+        --bg: #101114;
+        --text: #b6bac2;
+        --text-h: #f3f4f6;
+        --accent: #c084fc;
+        --accent-2: #7c3aed;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        background: radial-gradient(
+            circle at 50% 30%,
+            color-mix(in srgb, var(--accent) 18%, transparent),
+            transparent 60%
+          ),
+          var(--bg);
+        color: var(--text);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .stars {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .star {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: #fff;
+        opacity: 0.5;
+        animation: twinkle 3s ease-in-out infinite;
+      }
+
+      @keyframes twinkle {
+        0%,
+        100% {
+          opacity: 0.15;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+
+      .content {
+        position: relative;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .astro {
+        font-size: 72px;
+        display: inline-block;
+        margin-bottom: 8px;
+        animation: float 4s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) rotate(-4deg);
+        }
+        50% {
+          transform: translateY(-16px) rotate(4deg);
+        }
+      }
+
+      h1 {
+        font-size: 88px;
+        font-weight: 800;
+        letter-spacing: 4px;
+        margin: 0;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      h2 {
+        font-size: 22px;
+        color: var(--text-h);
+        margin: 8px 0 12px;
+        font-weight: 600;
+      }
+
+      p {
+        max-width: 380px;
+        margin: 0 auto 28px;
+        font-size: 15px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 26px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        color: #fff;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow: rgba(0, 0, 0, 0.4) 0 10px 30px -10px;
+        transition: transform 0.15s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stars" id="stars"></div>
+    <div class="content">
+      <span class="astro">🧑‍🚀</span>
+      <h1>404</h1>
+      <h2>Sahifa topilmadi</h2>
+      <p>Siz izlagan sahifa mavjud emas yoki ko'chirilgan bo'lishi mumkin.</p>
+      <a href="/portfolio/" class="btn">← Bosh sahifaga qaytish</a>
+    </div>
+    <script>
+      const container = document.getElementById('stars')
+      for (let i = 0; i < 60; i++) {
+        const star = document.createElement('div')
+        star.className = 'star'
+        star.style.left = Math.random() * 100 + '%'
+        star.style.top = Math.random() * 100 + '%'
+        star.style.animationDelay = Math.random() * 3 + 's'
+        container.appendChild(star)
+      }
+    </script>
+  </body>
+</html>
