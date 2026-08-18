@@ -26,21 +26,23 @@ function isValidPhone(value) {
   return UZ_PHONE_RE.test(normalized)
 }
 
+const VOWELS = 'aeiouаеёиоуыэюя'
+
 function isGibberish(text) {
   const trimmed = text.trim()
   if (trimmed.length < 15) return true
   if (!/\s/.test(trimmed)) return true
 
-  const letters = trimmed.toLowerCase().replace(/[^a-zʻʼ]/g, '')
+  const letters = trimmed.toLowerCase().replace(/[^a-zа-яёʻʼ]/g, '')
   if (letters.length === 0) return true
 
-  const vowels = letters.match(/[aeiou]/g) || []
+  const vowels = [...letters].filter((ch) => VOWELS.includes(ch))
   if (vowels.length / letters.length < 0.15) return true
 
   let run = 0
   let maxRun = 0
   for (const ch of letters) {
-    if ('aeiou'.includes(ch)) {
+    if (VOWELS.includes(ch)) {
       run = 0
     } else {
       run += 1

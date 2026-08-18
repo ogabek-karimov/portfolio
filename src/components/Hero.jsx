@@ -1,24 +1,25 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import './Hero.css'
 
 function Hero() {
+  const { dict } = useLanguage()
+
   return (
     <section className="hero" id="hero">
       <div className="container hero-inner">
-        <p className="hero-kicker">Salom, men</p>
+        <p className="hero-kicker">{dict.hero.kicker}</p>
         <h1>
-          Og'abek Karimov—<br />
-          <span>Frontend Developer</span>
+          {dict.hero.name}
+          <br />
+          <span>{dict.hero.role}</span>
         </h1>
-        <p className="hero-text">
-          HTML, CSS, JavaScript, React va Node.js yordamida zamonaviy,
-          tez va qulay veb-saytlar yarataman.
-        </p>
+        <p className="hero-text">{dict.hero.text}</p>
         <div className="hero-actions">
           <a href="#projects" className="btn btn-primary">
-            Loyihalarni ko'rish
+            {dict.hero.ctaProjects}
           </a>
           <a href="#contact" className="btn btn-outline">
-            Bog'lanish
+            {dict.hero.ctaContact}
           </a>
         </div>
       </div>

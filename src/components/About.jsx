@@ -1,7 +1,10 @@
 import profilePhoto from "../assets/profile.jpg";
+import { useLanguage } from "../i18n/LanguageContext";
 import "./About.css";
 
 function About() {
+  const { dict } = useLanguage();
+
   return (
     <section id='about' className='about'>
       <div className='container about-inner'>
@@ -14,19 +17,10 @@ function About() {
         </div>
         <div className='about-content'>
           <h2 className='section-title' style={{ textAlign: "left" }}>
-            Men haqimda
+            {dict.about.title}
           </h2>
-          <p>
-            Men frontend dasturchiman, foydalanuvchi uchun qulay va chiroyli
-            interfeyslar yarataman. HTML, CSS va JavaScript asosida boshlab,
-            hozirda React kutubxonasi bilan ishlayman va Node.js yordamida
-            loyihalarni yig'ish (build) va server tomonini ham o'rganib
-            bormoqdaman.
-          </p>
-          <p>
-            Yangi texnologiyalarni o'rganishni va murakkab muammolarni sodda,
-            tushunarli yechimlar bilan hal qilishni yoqtiraman.
-          </p>
+          <p>{dict.about.p1}</p>
+          <p>{dict.about.p2}</p>
         </div>
       </div>
     </section>

@@ -1,28 +1,23 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import './Projects.css'
 import todoImg from '../assets/project-todo.png'
 import calculatorImg from '../assets/project-calculator.png'
 import weatherImg from '../assets/project-weather.png'
 
-const projects = [
+const projectMeta = [
   {
-    title: 'To-Do List',
-    desc: "Vazifalarni qo'shish, bajarilganini belgilash va filtrlash imkoniyatiga ega, ma'lumotlar brauzer xotirasida (localStorage) saqlanadi.",
     tags: ['HTML', 'CSS', 'JavaScript'],
     image: todoImg,
     demo: '/portfolio/projects/todo-app/',
     code: 'https://github.com/ogabek-karimov/portfolio/tree/master/public/projects/todo-app',
   },
   {
-    title: 'Kalkulyator',
-    desc: "Asosiy arifmetik amallarni bajaradigan, klaviatura va sichqoncha bilan boshqariladigan kalkulyator ilovasi.",
     tags: ['HTML', 'CSS', 'JavaScript'],
     image: calculatorImg,
     demo: '/portfolio/projects/calculator/',
     code: 'https://github.com/ogabek-karimov/portfolio/tree/master/public/projects/calculator',
   },
   {
-    title: 'Ob-havo',
-    desc: "Shahar nomi bo'yicha joriy ob-havo ma'lumotlarini bepul ochiq API orqali real vaqtda ko'rsatadigan ilova.",
     tags: ['JavaScript', 'Fetch API'],
     image: weatherImg,
     demo: '/portfolio/projects/weather-app/',
@@ -31,15 +26,18 @@ const projects = [
 ]
 
 function Projects() {
+  const { dict } = useLanguage()
+  const projects = projectMeta.map((meta, i) => ({ ...meta, ...dict.projects.items[i] }))
+
   return (
     <section id="projects" className="projects">
       <div className="container">
-        <h2 className="section-title">Loyihalar</h2>
-        <p className="section-subtitle">Ba'zi ishlarim</p>
+        <h2 className="section-title">{dict.projects.title}</h2>
+        <p className="section-subtitle">{dict.projects.subtitle}</p>
 
         <div className="projects-grid">
           {projects.map((project) => (
-            <div className="project-card" key={project.title}>
+            <div className="project-card" key={project.demo}>
               <a href={project.demo} className="project-thumb-link">
                 <img src={project.image} alt={project.title} className="project-thumb" />
               </a>
@@ -53,10 +51,10 @@ function Projects() {
                 </div>
                 <div className="project-links">
                   <a href={project.demo} className="btn btn-outline">
-                    Live demo
+                    {dict.projects.liveDemo}
                   </a>
                   <a href={project.code} target="_blank" rel="noreferrer" className="btn btn-outline">
-                    GitHub
+                    {dict.projects.github}
                   </a>
                 </div>
               </div>

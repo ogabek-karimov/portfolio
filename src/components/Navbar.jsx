@@ -1,15 +1,17 @@
 import { useState } from 'react'
+import { useLanguage } from '../i18n/LanguageContext'
 import './Navbar.css'
-
-const links = [
-  { href: '#about', label: 'Men haqimda' },
-  { href: '#skills', label: "Ko'nikmalar" },
-  { href: '#projects', label: 'Loyihalar' },
-  { href: '#contact', label: 'Aloqa' },
-]
 
 function Navbar() {
   const [open, setOpen] = useState(false)
+  const { lang, setLang, dict } = useLanguage()
+
+  const links = [
+    { href: '#about', label: dict.nav.about },
+    { href: '#skills', label: dict.nav.skills },
+    { href: '#projects', label: dict.nav.projects },
+    { href: '#contact', label: dict.nav.contact },
+  ]
 
   return (
     <header className="navbar">
@@ -26,16 +28,35 @@ function Navbar() {
           ))}
         </nav>
 
-        <button
-          type="button"
-          className="menu-toggle"
-          aria-label="Menyuni ochish"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
+        <div className="navbar-right">
+          <div className="lang-switch">
+            <button
+              type="button"
+              className={lang === 'uz' ? 'active' : ''}
+              onClick={() => setLang('uz')}
+            >
+              UZ
+            </button>
+            <button
+              type="button"
+              className={lang === 'ru' ? 'active' : ''}
+              onClick={() => setLang('ru')}
+            >
+              RU
+            </button>
+          </div>
+
+          <button
+            type="button"
+            className="menu-toggle"
+            aria-label={dict.nav.menuToggle}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
       </div>
     </header>
   )

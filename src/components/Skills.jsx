@@ -1,3 +1,4 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import './Skills.css'
 
 const skills = [
@@ -10,11 +11,13 @@ const skills = [
 ]
 
 function Skills() {
+  const { dict } = useLanguage()
+
   return (
     <section id="skills" className="skills">
       <div className="container">
-        <h2 className="section-title">Ko'nikmalar</h2>
-        <p className="section-subtitle">Men ishlatadigan texnologiyalar</p>
+        <h2 className="section-title">{dict.skills.title}</h2>
+        <p className="section-subtitle">{dict.skills.subtitle}</p>
 
         <div className="skills-grid">
           {skills.map((skill) => (

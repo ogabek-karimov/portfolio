@@ -1,12 +1,14 @@
+import { useLanguage } from '../i18n/LanguageContext'
 import './Footer.css'
 
 function Footer() {
   const year = new Date().getFullYear()
+  const { dict } = useLanguage()
 
   return (
     <footer className="footer">
       <div className="container footer-inner">
-        <p>© {year} Karimov Og'abek. Barcha huquqlar himoyalangan.</p>
+        <p>© {year} Karimov Og'abek. {dict.footer.rights}</p>
         <div className="footer-links">
           {/* <a href="https://github.com" target="_blank" rel="noreferrer">
             GitHub

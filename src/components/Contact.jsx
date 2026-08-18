@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLanguage } from '../i18n/LanguageContext'
 import './Contact.css'
 
 const RELAY_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
@@ -36,21 +37,23 @@ function formatPhoneDigits(digits) {
   return result.replace(/\s+$/, '')
 }
 
+const VOWELS = 'aeiouаеёиоуыэюя'
+
 function isGibberish(text) {
   const trimmed = text.trim()
   if (trimmed.length < 15) return true
   if (!/\s/.test(trimmed)) return true
 
-  const letters = trimmed.toLowerCase().replace(/[^a-zʻʼ]/g, '')
+  const letters = trimmed.toLowerCase().replace(/[^a-zа-яёʻʼ]/g, '')
   if (letters.length === 0) return true
 
-  const vowels = letters.match(/[aeiou]/g) || []
+  const vowels = [...letters].filter((ch) => VOWELS.includes(ch))
   if (vowels.length / letters.length < 0.15) return true
 
   let run = 0
   let maxRun = 0
   for (const ch of letters) {
-    if ('aeiou'.includes(ch)) {
+    if (VOWELS.includes(ch)) {
       run = 0
     } else {
       run += 1
@@ -61,6 +64,7 @@ function isGibberish(text) {
 }
 
 function Contact() {
+  const { dict } = useLanguage()
   const [form, setForm] = useState({ name: '', phone: PHONE_PREFIX, message: '', website: '' })
   const [status, setStatus] = useState('idle')
   const [errorMsg, setErrorMsg] = useState('')
@@ -94,13 +98,13 @@ function Contact() {
 
     if (!isValidPhone(form.phone)) {
       setStatus('error')
-      setErrorMsg("Telefon raqamni +998XXXXXXXXX ko'rinishida to'liq kiriting")
+      setErrorMsg(dict.contact.errorPhone)
       return
     }
 
     if (isGibberish(form.message)) {
       setStatus('error')
-      setErrorMsg("Iltimos, tushunarli xabar yozing (kamida 15 ta belgi, ma'noli matn)")
+      setErrorMsg(dict.contact.errorGibberish)
       return
     }
 
@@ -116,7 +120,7 @@ function Contact() {
       const data = await res.json().catch(() => ({}))
 
       if (!res.ok) {
-        setErrorMsg(data.error || "Xatolik yuz berdi, birozdan so'ng qayta urinib ko'ring.")
+        setErrorMsg(data.error || dict.contact.errorGeneric)
         setStatus('error')
         return
       }
@@ -124,7 +128,7 @@ function Contact() {
       setStatus('success')
       setForm({ name: '', phone: PHONE_PREFIX, message: '', website: '' })
     } catch {
-      setErrorMsg("Xatolik yuz berdi, birozdan so'ng qayta urinib ko'ring.")
+      setErrorMsg(dict.contact.errorGeneric)
       setStatus('error')
     }
   }
@@ -132,26 +136,24 @@ function Contact() {
   return (
     <section id="contact" className="contact">
       <div className="container">
-        <h2 className="section-title">Aloqa</h2>
-        <p className="section-subtitle">
-          Loyiha bo'yicha taklifingiz bormi? Yozing!
-        </p>
+        <h2 className="section-title">{dict.contact.title}</h2>
+        <p className="section-subtitle">{dict.contact.subtitle}</p>
 
         <form className="contact-form" onSubmit={handleSubmit}>
           <div className="form-row">
             <label>
-              Ismingiz
+              {dict.contact.nameLabel}
               <input
                 type="text"
                 name="name"
                 required
                 value={form.name}
                 onChange={handleChange}
-                placeholder="Ismingiz"
+                placeholder={dict.contact.namePlaceholder}
               />
             </label>
             <label>
-              Telefon raqam
+              {dict.contact.phoneLabel}
               <input
                 type="tel"
                 name="phone"
@@ -167,7 +169,7 @@ function Contact() {
             </label>
           </div>
           <label>
-            Xabar
+            {dict.contact.messageLabel}
             <textarea
               name="message"
               rows="5"
@@ -175,7 +177,7 @@ function Contact() {
               minLength={15}
               value={form.message}
               onChange={handleChange}
-              placeholder="Xabaringizni shu yerga to'liq va tushunarli yozing..."
+              placeholder={dict.contact.messagePlaceholder}
             />
           </label>
           <input
@@ -189,11 +191,9 @@ function Contact() {
             aria-hidden="true"
           />
           <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
-            {status === 'sending' ? 'Yuborilmoqda...' : 'Yuborish'}
+            {status === 'sending' ? dict.contact.sending : dict.contact.send}
           </button>
-          {status === 'success' && (
-            <p className="form-status success">Xabaringiz yuborildi, rahmat!</p>
-          )}
+          {status === 'success' && <p className="form-status success">{dict.contact.success}</p>}
           {status === 'error' && <p className="form-status error">{errorMsg}</p>}
         </form>
       </div>
