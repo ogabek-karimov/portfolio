@@ -4,43 +4,115 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ob-havo — Mini loyiha</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=3" />
   </head>
   <body>
-    <div class="app">
-      <a href="../../" class="back-link">← Portfolioga qaytish</a>
-      <h1>Ob-havo</h1>
-      <p class="subtitle">Shahar nomini kiriting va joriy ob-havoni ko'ring</p>
+    <div class="page">
+      <a href="../../" class="back-link" data-i18n="backLink">← Portfolioga qaytish</a>
 
-      <form id="search-form" class="search-form">
-        <input
-          type="text"
-          id="city-input"
-          placeholder="Masalan: Tashkent"
-          autocomplete="off"
-          required
-        />
-        <button type="submit">Qidirish</button>
-      </form>
-
-      <div id="status" class="status"></div>
-
-      <div id="weather-card" class="weather-card hidden">
-        <div class="location" id="location"></div>
-        <div class="temp" id="temp"></div>
-        <div class="description" id="description"></div>
-        <div class="details">
-          <div>
-            <span class="label">Shamol</span>
-            <span id="wind"></span>
+      <div class="dashboard">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <button id="theme-toggle" class="icon-toggle" type="button" aria-label="Rejimni almashtirish">
+              <span class="theme-icon sun">☀️</span>
+              <span class="theme-icon moon">🌙</span>
+            </button>
+            <div class="lang-switch">
+              <button class="lang-btn active" data-lang="uz" type="button">UZ</button>
+              <button class="lang-btn" data-lang="ru" type="button">RU</button>
+            </div>
+            <div class="unit-switch">
+              <button class="unit-btn active" data-unit="c" type="button">°C</button>
+              <button class="unit-btn" data-unit="f" type="button">°F</button>
+            </div>
           </div>
-          <div>
-            <span class="label">Namlik</span>
-            <span id="humidity"></span>
+
+          <form id="search-form" class="search-form">
+            <input
+              type="text"
+              id="city-input"
+              data-i18n-placeholder="searchPlaceholder"
+              placeholder="Shahar nomini kiriting..."
+              autocomplete="off"
+            />
+            <button type="submit" class="search-btn" aria-label="Qidirish">🔍</button>
+          </form>
+
+          <button id="location-btn" class="location-btn" type="button">
+            <span>📍</span>
+            <span data-i18n="currentLocation">Joriy joylashuv</span>
+          </button>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div id="content" class="content hidden">
+          <div class="hero-card">
+            <div class="hero-main">
+              <div class="hero-place">
+                <h1 id="city-name">—</h1>
+                <p id="date-time">—</p>
+              </div>
+              <div class="hero-temp">
+                <span id="temp-value">--°</span>
+                <span class="feels-like"><span data-i18n="feelsLike">His qilinadi</span> <span id="feels-value">--°</span></span>
+              </div>
+              <div class="hero-condition">
+                <span id="condition-icon" class="condition-icon">☀️</span>
+                <span id="condition-text">—</span>
+              </div>
+            </div>
+
+            <div class="hero-stats">
+              <div class="stat">
+                <span class="stat-icon">💧</span>
+                <span class="stat-label" data-i18n="humidity">Namlik</span>
+                <span class="stat-value" id="stat-humidity">--%</span>
+              </div>
+              <div class="stat">
+                <span class="stat-icon">🌬️</span>
+                <span class="stat-label" data-i18n="windSpeed">Shamol</span>
+                <span class="stat-value" id="stat-wind">-- km/h</span>
+              </div>
+              <div class="stat">
+                <span class="stat-icon">🌅</span>
+                <span class="stat-label" data-i18n="sunrise">Quyosh chiqishi</span>
+                <span class="stat-value" id="stat-sunrise">--:--</span>
+              </div>
+              <div class="stat">
+                <span class="stat-icon">🌇</span>
+                <span class="stat-label" data-i18n="sunset">Quyosh botishi</span>
+                <span class="stat-value" id="stat-sunset">--:--</span>
+              </div>
+              <div class="stat">
+                <span class="stat-icon">🧭</span>
+                <span class="stat-label" data-i18n="pressure">Bosim</span>
+                <span class="stat-value" id="stat-pressure">-- hPa</span>
+              </div>
+              <div class="stat">
+                <span class="stat-icon">🔆</span>
+                <span class="stat-label" data-i18n="uvIndex">UV indeks</span>
+                <span class="stat-value" id="stat-uv">--</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="forecast-row">
+            <div class="forecast-card">
+              <h2 data-i18n="forecast5">5 kunlik prognoz</h2>
+              <ul id="daily-list" class="daily-list"></ul>
+            </div>
+
+            <div class="forecast-card">
+              <h2 data-i18n="hourlyForecast">Soatlik prognoz</h2>
+              <div id="hourly-list" class="hourly-list"></div>
+            </div>
           </div>
         </div>
+
+        <p class="card-credit">Karimov Og'abek © 2024, barcha huquqlar himoyalangan</p>
       </div>
     </div>
-    <script src="script.js"></script>
+    <script src="script.js?v=3"></script>
   </body>
 </html>
