@@ -10,13 +10,12 @@ function Navbar() {
   const { theme, toggleTheme } = useTheme()
 
   const sectionLinks = [
-    { href: '/#about', label: dict.nav.about },
     { href: '/#skills', label: dict.nav.skills },
     { href: '/#projects', label: dict.nav.projects },
     { href: '/#contact', label: dict.nav.contact },
   ]
 
-  const pageLinks = [
+  const aboutSubLinks = [
     { href: '/experience', label: dict.nav.experience },
     { href: '/certificates', label: dict.nav.certificates },
   ]
@@ -29,12 +28,20 @@ function Navbar() {
         </Link>
 
         <nav className={`nav-links ${open ? 'open' : ''}`}>
-          {sectionLinks.map((link) => (
-            <Link key={link.href} to={link.href} onClick={() => setOpen(false)}>
-              {link.label}
+          <div className="nav-dropdown">
+            <Link to="/#about" onClick={() => setOpen(false)}>
+              {dict.nav.about}
             </Link>
-          ))}
-          {pageLinks.map((link) => (
+            <div className="nav-dropdown-menu">
+              {aboutSubLinks.map((link) => (
+                <Link key={link.href} to={link.href} onClick={() => setOpen(false)}>
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {sectionLinks.map((link) => (
             <Link key={link.href} to={link.href} onClick={() => setOpen(false)}>
               {link.label}
             </Link>
