@@ -11,6 +11,10 @@ const itemsLeft = document.getElementById('items-left')
 const clearCompletedBtn = document.getElementById('clear-completed')
 const filterButtons = document.querySelectorAll('.filter-btn')
 
+const unsavedModal = document.getElementById('unsaved-modal')
+const modalSaveBtn = document.getElementById('modal-save')
+const modalCancelBtn = document.getElementById('modal-cancel')
+
 const fName = document.getElementById('f-name')
 const fDesc = document.getElementById('f-desc')
 const fCategory = document.getElementById('f-category')
@@ -23,6 +27,7 @@ const fFulfillmentValue = document.getElementById('f-fulfillment-value')
 let tasks = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
 let currentFilter = 'all'
 let editingId = null
+let pendingFilterBtn = null
 
 function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
@@ -120,13 +125,50 @@ function openForm(task) {
 
 function closeForm() {
   editingId = null
+  pendingFilterBtn = null
   todoForm.reset()
   todoForm.classList.add('hidden')
   tableView.classList.remove('hidden')
 }
 
+function isFormDirty() {
+  return Boolean(
+    fName.value.trim() ||
+      fDesc.value.trim() ||
+      fCategory.value.trim() ||
+      fDate.value ||
+      fTime.value ||
+      Number(fFulfillment.value) !== 0 ||
+      fPriority.value !== "O'rta",
+  )
+}
+
+function applyFilter(btn) {
+  filterButtons.forEach((b) => b.classList.remove('active'))
+  btn.classList.add('active')
+  currentFilter = btn.dataset.filter
+  render()
+}
+
+function openUnsavedModal(btn) {
+  pendingFilterBtn = btn
+  unsavedModal.classList.remove('hidden')
+}
+
+function closeUnsavedModal() {
+  pendingFilterBtn = null
+  unsavedModal.classList.add('hidden')
+}
+
 addBtn.addEventListener('click', () => openForm(null))
 cancelBtn.addEventListener('click', closeForm)
+
+modalCancelBtn.addEventListener('click', closeUnsavedModal)
+
+modalSaveBtn.addEventListener('click', () => {
+  unsavedModal.classList.add('hidden')
+  todoForm.requestSubmit()
+})
 
 fFulfillment.addEventListener('input', () => {
   fFulfillmentValue.textContent = `${fFulfillment.value}%`
@@ -154,8 +196,14 @@ todoForm.addEventListener('submit', (e) => {
   }
 
   save()
+  const filterToApply = pendingFilterBtn
   closeForm()
-  render()
+
+  if (filterToApply) {
+    applyFilter(filterToApply)
+  } else {
+    render()
+  }
 })
 
 clearCompletedBtn.addEventListener('click', () => {
@@ -166,10 +214,18 @@ clearCompletedBtn.addEventListener('click', () => {
 
 filterButtons.forEach((btn) => {
   btn.addEventListener('click', () => {
-    filterButtons.forEach((b) => b.classList.remove('active'))
-    btn.classList.add('active')
-    currentFilter = btn.dataset.filter
-    render()
+    const formOpen = !todoForm.classList.contains('hidden')
+
+    if (formOpen && isFormDirty()) {
+      openUnsavedModal(btn)
+      return
+    }
+
+    if (formOpen) {
+      closeForm()
+    }
+
+    applyFilter(btn)
   })
 })
 
