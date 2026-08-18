@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { useLanguage } from '../i18n/LanguageContext'
+import { useTheme } from '../theme/ThemeContext'
 import './Navbar.css'
 
 function Navbar() {
   const [open, setOpen] = useState(false)
   const { lang, setLang, dict } = useLanguage()
+  const { theme, toggleTheme } = useTheme()
 
   const links = [
     { href: '#about', label: dict.nav.about },
@@ -29,6 +31,15 @@ function Navbar() {
         </nav>
 
         <div className="navbar-right">
+          <button
+            type="button"
+            className="theme-toggle"
+            aria-label="Mavzuni almashtirish"
+            onClick={toggleTheme}
+          >
+            {theme === 'dark' ? '🌙' : '☀️'}
+          </button>
+
           <div className="lang-switch">
             <button
               type="button"

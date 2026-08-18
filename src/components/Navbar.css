@@ -60,6 +60,20 @@
   gap: 16px;
 }
 
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: none;
+  cursor: pointer;
+  font-size: 15px;
+  padding: 0;
+}
+
 .lang-switch {
   display: flex;
   border: 1px solid var(--border);
