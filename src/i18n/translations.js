@@ -4,8 +4,11 @@ const translations = {
       about: 'Men haqimda',
       skills: "Ko'nikmalar",
       projects: 'Loyihalar',
+      experience: 'Ta\'lim va tajriba',
+      certificates: 'Sertifikatlar',
       contact: 'Aloqa',
       menuToggle: 'Menyuni ochish',
+      resume: 'Rezyume',
     },
     hero: {
       kicker: 'Salom, men',
@@ -62,14 +65,68 @@ const translations = {
     footer: {
       rights: 'Barcha huquqlar himoyalangan.',
     },
+    experience: {
+      backLink: '← Bosh sahifaga qaytish',
+      title: "Ta'lim va tajriba",
+      subtitle: "O'rganish yo'lim bosqichma-bosqich",
+      items: [
+        {
+          date: '2024 — hozirgacha',
+          title: 'Frontend dasturlashni mustaqil o\'rganish',
+          place: 'Onlayn kurslar va amaliyot',
+          desc: "HTML, CSS va JavaScript asoslaridan boshlab, DOM, formalar va responsive dizaynni chuqur o'rgandim.",
+        },
+        {
+          date: '2025',
+          title: 'React kutubxonasi bilan ishlashni boshladim',
+          place: 'Shaxsiy loyihalar',
+          desc: 'Komponentlar, state, props va hooks asosida interaktiv interfeyslar yaratishni o\'rgandim.',
+        },
+        {
+          date: '2025 — 2026',
+          title: "Birinchi shaxsiy loyihalarni yaratdim",
+          place: 'Portfolio va mini-ilovalar',
+          desc: "To-Do List, Kalkulyator, Ob-havo kabi to'liq ishlaydigan kichik loyihalarni yaratib, GitHub Pages'ga joyladim.",
+        },
+        {
+          date: '2026',
+          title: "Node.js va zamonaviy vositalar bilan tanishuv",
+          place: 'Amaliy mashqlar',
+          desc: "Loyihalarni yig'ish (build), Cloudflare Workers va tashqi API'lar bilan ishlashni o'rganib bormoqdaman.",
+        },
+      ],
+    },
+    certificates: {
+      backLink: '← Bosh sahifaga qaytish',
+      title: 'Sertifikatlar',
+      subtitle: "Tugatgan kurslar va erishgan yutuqlarim",
+      note: "Bu bo'lim hozircha namuna sifatida to'ldirilgan — haqiqiy sertifikatlaringiz bilan almashtirilishi kerak.",
+      items: [
+        { title: 'Kurs nomi', issuer: "Platforma nomi", date: '2024' },
+        { title: 'Kurs nomi', issuer: "Platforma nomi", date: '2025' },
+        { title: 'Kurs nomi', issuer: "Platforma nomi", date: '2025' },
+      ],
+    },
+    resume: {
+      downloadBtn: 'Rezyume yuklab olish',
+    },
+    notFound: {
+      title: '404',
+      subtitle: 'Sahifa topilmadi',
+      desc: "Siz izlagan sahifa mavjud emas yoki ko'chirilgan bo'lishi mumkin.",
+      backBtn: '← Bosh sahifaga qaytish',
+    },
   },
   ru: {
     nav: {
       about: 'О себе',
       skills: 'Навыки',
       projects: 'Проекты',
+      experience: 'Образование и опыт',
+      certificates: 'Сертификаты',
       contact: 'Контакты',
       menuToggle: 'Открыть меню',
+      resume: 'Резюме',
     },
     hero: {
       kicker: 'Привет, я',
@@ -125,6 +182,57 @@ const translations = {
     },
     footer: {
       rights: 'Все права защищены.',
+    },
+    experience: {
+      backLink: '← Вернуться на главную',
+      title: 'Образование и опыт',
+      subtitle: 'Мой путь обучения шаг за шагом',
+      items: [
+        {
+          date: '2024 — по настоящее время',
+          title: 'Самостоятельное изучение frontend-разработки',
+          place: 'Онлайн-курсы и практика',
+          desc: 'Начал с основ HTML, CSS и JavaScript, глубоко изучил DOM, формы и адаптивный дизайн.',
+        },
+        {
+          date: '2025',
+          title: 'Начал работать с библиотекой React',
+          place: 'Личные проекты',
+          desc: 'Изучил создание интерактивных интерфейсов на основе компонентов, state, props и hooks.',
+        },
+        {
+          date: '2025 — 2026',
+          title: 'Создал первые личные проекты',
+          place: 'Портфолио и мини-приложения',
+          desc: 'Создал и разместил на GitHub Pages полноценные мини-проекты: To-Do List, Калькулятор, Погода.',
+        },
+        {
+          date: '2026',
+          title: 'Знакомство с Node.js и современными инструментами',
+          place: 'Практические занятия',
+          desc: 'Изучаю сборку проектов, Cloudflare Workers и работу с внешними API.',
+        },
+      ],
+    },
+    certificates: {
+      backLink: '← Вернуться на главную',
+      title: 'Сертификаты',
+      subtitle: 'Пройденные курсы и достижения',
+      note: 'Этот раздел пока заполнен примерами — замените их на свои настоящие сертификаты.',
+      items: [
+        { title: 'Название курса', issuer: 'Название платформы', date: '2024' },
+        { title: 'Название курса', issuer: 'Название платформы', date: '2025' },
+        { title: 'Название курса', issuer: 'Название платформы', date: '2025' },
+      ],
+    },
+    resume: {
+      downloadBtn: 'Скачать резюме',
+    },
+    notFound: {
+      title: '404',
+      subtitle: 'Страница не найдена',
+      desc: 'Страница, которую вы ищете, не существует или была перемещена.',
+      backBtn: '← Вернуться на главную',
     },
   },
 }

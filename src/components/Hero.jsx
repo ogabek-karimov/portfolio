@@ -21,6 +21,9 @@ function Hero() {
           <a href="#contact" className="btn btn-outline">
             {dict.hero.ctaContact}
           </a>
+          <a href="/portfolio/resume.pdf" download className="btn btn-outline">
+            {dict.resume.downloadBtn}
+          </a>
         </div>
       </div>
     </section>

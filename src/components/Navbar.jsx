@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeContext'
 import './Navbar.css'
@@ -8,25 +9,35 @@ function Navbar() {
   const { lang, setLang, dict } = useLanguage()
   const { theme, toggleTheme } = useTheme()
 
-  const links = [
-    { href: '#about', label: dict.nav.about },
-    { href: '#skills', label: dict.nav.skills },
-    { href: '#projects', label: dict.nav.projects },
-    { href: '#contact', label: dict.nav.contact },
+  const sectionLinks = [
+    { href: '/#about', label: dict.nav.about },
+    { href: '/#skills', label: dict.nav.skills },
+    { href: '/#projects', label: dict.nav.projects },
+    { href: '/#contact', label: dict.nav.contact },
+  ]
+
+  const pageLinks = [
+    { href: '/experience', label: dict.nav.experience },
+    { href: '/certificates', label: dict.nav.certificates },
   ]
 
   return (
     <header className="navbar">
       <div className="container navbar-inner">
-        <a href="#" className="logo">
+        <Link to="/" className="logo">
           Og'abek Karimov
-        </a>
+        </Link>
 
         <nav className={`nav-links ${open ? 'open' : ''}`}>
-          {links.map((link) => (
-            <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
+          {sectionLinks.map((link) => (
+            <Link key={link.href} to={link.href} onClick={() => setOpen(false)}>
               {link.label}
-            </a>
+            </Link>
+          ))}
+          {pageLinks.map((link) => (
+            <Link key={link.href} to={link.href} onClick={() => setOpen(false)}>
+              {link.label}
+            </Link>
           ))}
         </nav>
 

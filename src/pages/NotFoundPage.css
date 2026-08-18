@@ -1,0 +1,85 @@
+.not-found {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 50% 30%,
+    color-mix(in srgb, var(--accent) 18%, transparent),
+    transparent 60%
+  );
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-h);
+  opacity: 0.5;
+  animation: nf-twinkle 3s ease-in-out infinite;
+}
+
+@keyframes nf-twinkle {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.not-found-content {
+  position: relative;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.astro {
+  font-size: 72px;
+  display: inline-block;
+  margin-bottom: 8px;
+  animation: nf-float 4s ease-in-out infinite;
+}
+
+@keyframes nf-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(4deg);
+  }
+}
+
+.not-found-content h1 {
+  font-size: 88px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  margin: 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.not-found-content h2 {
+  font-size: 22px;
+  margin: 8px 0 12px;
+}
+
+.not-found-content p {
+  max-width: 380px;
+  margin: 0 auto 28px;
+  font-size: 15px;
+  color: var(--text);
+}
