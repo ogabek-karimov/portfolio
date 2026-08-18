@@ -21,7 +21,10 @@ function Hero() {
           <a href="#contact" className="btn btn-outline">
             {dict.hero.ctaContact}
           </a>
-          <a href="/portfolio/resume.pdf" download className="btn btn-outline">
+          <a
+            href="https://portfolio-contact-relay.bek8896ok.workers.dev/resume.pdf"
+            className="btn btn-outline"
+          >
             {dict.resume.downloadBtn}
           </a>
         </div>

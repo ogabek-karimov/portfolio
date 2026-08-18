@@ -1,3 +1,7 @@
 name = "portfolio-contact-relay"
 main = "src/index.js"
 compatibility_date = "2026-08-01"
+
+[[kv_namespaces]]
+binding = "SITE_CONTENT"
+id = "b8fbfc3a5e98435eaa7aa8671d7e8315"

@@ -1,10 +1,26 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import './SubPage.css'
 
+const API_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
+
 function ExperiencePage() {
-  const { dict } = useLanguage()
+  const { lang, dict } = useLanguage()
   const { experience } = dict
+  const [items, setItems] = useState(experience.items)
+
+  useEffect(() => {
+    setItems(experience.items)
+    fetch(`${API_URL}/content`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.experience && Array.isArray(data.experience[lang]) && data.experience[lang].length > 0) {
+          setItems(data.experience[lang])
+        }
+      })
+      .catch(() => {})
+  }, [lang, experience.items])
 
   return (
     <section className="subpage">
@@ -17,7 +33,7 @@ function ExperiencePage() {
         <p className="section-subtitle">{experience.subtitle}</p>
 
         <div className="timeline">
-          {experience.items.map((item, i) => (
+          {items.map((item, i) => (
             <div className="timeline-item" key={i}>
               <div className="timeline-dot" />
               <div className="timeline-content">
