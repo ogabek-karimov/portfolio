@@ -7,35 +7,90 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="app">
+    <div class="page">
       <a href="../../" class="back-link">← Portfolioga qaytish</a>
-      <h1>To-Do List</h1>
-      <p class="subtitle">Vazifalaringizni qo'shing, bajarilganini belgilang</p>
 
-      <form id="todo-form" class="todo-form">
-        <input
-          type="text"
-          id="todo-input"
-          placeholder="Yangi vazifa qo'shing..."
-          autocomplete="off"
-          required
-        />
-        <button type="submit">Qo'shish</button>
-      </form>
+      <div class="card">
+        <h1>To-Do List</h1>
 
-      <div class="filters">
-        <button class="filter-btn active" data-filter="all">Barchasi</button>
-        <button class="filter-btn" data-filter="active">Faol</button>
-        <button class="filter-btn" data-filter="completed">Bajarilgan</button>
-      </div>
+        <div class="toolbar">
+          <button id="add-btn" type="button" class="add-btn">+ Yangi vazifa qo'shish</button>
+          <div class="filters">
+            <button class="filter-btn active" data-filter="all">Barchasi</button>
+            <button class="filter-btn" data-filter="active">Bajarilmagan</button>
+            <button class="filter-btn" data-filter="completed">Bajarilgan</button>
+          </div>
+        </div>
 
-      <ul id="todo-list" class="todo-list"></ul>
+        <div id="table-view" class="table-view">
+          <table class="todo-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Vazifa</th>
+                <th>Tavsif</th>
+                <th>Kategoriya</th>
+                <th>Muddat</th>
+                <th>Muhimlik</th>
+                <th>Bajarilish</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="todo-tbody"></tbody>
+          </table>
+          <p id="empty-state" class="empty-state">Hozircha vazifalar yo'q</p>
+        </div>
 
-      <p id="empty-state" class="empty-state">Hozircha vazifalar yo'q</p>
+        <form id="todo-form" class="todo-form hidden">
+          <h2 id="form-title">Yangi vazifa qo'shish:</h2>
+          <div class="form-grid">
+            <label>
+              Nomi
+              <input type="text" id="f-name" placeholder="Vazifa nomini yozing" required />
+            </label>
+            <label>
+              Muhimlik
+              <select id="f-priority">
+                <option value="Past">Past</option>
+                <option value="O'rta" selected>O'rta</option>
+                <option value="Yuqori">Yuqori</option>
+              </select>
+            </label>
+            <label class="span-2">
+              Tavsif
+              <textarea id="f-desc" rows="2" placeholder="Qisqacha tavsif — ixtiyoriy"></textarea>
+            </label>
+            <label>
+              <span class="fulfillment-label">
+                Bajarilish darajasi <b id="f-fulfillment-value">0%</b>
+              </span>
+              <input type="range" id="f-fulfillment" min="0" max="100" step="5" value="0" />
+            </label>
+            <label>
+              Kategoriya
+              <input type="text" id="f-category" placeholder="masalan: ish, uy, o'qish" />
+            </label>
+            <label>
+              Sana
+              <input type="date" id="f-date" />
+            </label>
+            <label>
+              Vaqt
+              <input type="time" id="f-time" />
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="save-btn">Saqlash</button>
+            <button type="button" id="cancel-btn" class="cancel-btn">Bekor qilish</button>
+          </div>
+        </form>
 
-      <div class="footer-row">
-        <span id="items-left">0 ta vazifa qoldi</span>
-        <button id="clear-completed">Bajarilganlarni tozalash</button>
+        <div class="footer-row">
+          <span id="items-left">0 ta vazifa qoldi</span>
+          <button id="clear-completed" type="button">Bajarilganlarni tozalash</button>
+        </div>
+
+        <p class="card-credit">Karimov Og'abek © 2024, barcha huquqlar himoyalangan</p>
       </div>
     </div>
     <script src="script.js"></script>
