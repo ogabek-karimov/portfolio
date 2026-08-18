@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './AdminPage.css'
 
 const API_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
@@ -21,6 +21,12 @@ function AdminPage() {
   const [certificates, setCertificates] = useState({ uz: [], ru: [] })
   const [loaded, setLoaded] = useState(false)
   const [saveMsg, setSaveMsg] = useState('')
+  const [highlightIndex, setHighlightIndex] = useState(null)
+  const itemRefs = useRef({})
+
+  useEffect(() => {
+    setHighlightIndex(null)
+  }, [tab, editLang])
 
   useEffect(() => {
     if (!token) return
@@ -93,9 +99,17 @@ function AdminPage() {
   }
 
   function addItem(section) {
+    const currentState = section === 'experience' ? experience : certificates
     const setter = section === 'experience' ? setExperience : setCertificates
     const empty = section === 'experience' ? EMPTY_EXPERIENCE_ITEM : EMPTY_CERT_ITEM
+    const newIndex = currentState[editLang].length
+
     setter((prev) => ({ ...prev, [editLang]: [...prev[editLang], { ...empty }] }))
+    setHighlightIndex(newIndex)
+    setTimeout(() => {
+      itemRefs.current[newIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 50)
+    setTimeout(() => setHighlightIndex(null), 2000)
   }
 
   function removeItem(section, index) {
@@ -230,7 +244,22 @@ function AdminPage() {
             {tab === 'experience' && (
               <div className="admin-list">
                 {experience[editLang].map((item, i) => (
-                  <div className="admin-item" key={i}>
+                  <div
+                    className={`admin-item ${highlightIndex === i ? 'highlight' : ''}`}
+                    key={i}
+                    ref={(el) => (itemRefs.current[i] = el)}
+                  >
+                    <div className="admin-item-head">
+                      <span>Yozuv №{i + 1}</span>
+                      <button
+                        type="button"
+                        className="icon-btn"
+                        title="O'chirish"
+                        onClick={() => removeItem('experience', i)}
+                      >
+                        🗑️
+                      </button>
+                    </div>
                     <input
                       placeholder="Sana (masalan: 2025)"
                       value={item.date}
@@ -252,9 +281,6 @@ function AdminPage() {
                       value={item.desc}
                       onChange={(e) => updateItem('experience', i, 'desc', e.target.value)}
                     />
-                    <button className="remove-btn" onClick={() => removeItem('experience', i)}>
-                      O'chirish
-                    </button>
                   </div>
                 ))}
                 <button className="btn btn-outline" onClick={() => addItem('experience')}>
@@ -269,7 +295,22 @@ function AdminPage() {
             {tab === 'certificates' && (
               <div className="admin-list">
                 {certificates[editLang].map((item, i) => (
-                  <div className="admin-item" key={i}>
+                  <div
+                    className={`admin-item ${highlightIndex === i ? 'highlight' : ''}`}
+                    key={i}
+                    ref={(el) => (itemRefs.current[i] = el)}
+                  >
+                    <div className="admin-item-head">
+                      <span>Sertifikat №{i + 1}</span>
+                      <button
+                        type="button"
+                        className="icon-btn"
+                        title="O'chirish"
+                        onClick={() => removeItem('certificates', i)}
+                      >
+                        🗑️
+                      </button>
+                    </div>
                     <input
                       placeholder="Sertifikat nomi"
                       value={item.title}
@@ -285,9 +326,6 @@ function AdminPage() {
                       value={item.date}
                       onChange={(e) => updateItem('certificates', i, 'date', e.target.value)}
                     />
-                    <button className="remove-btn" onClick={() => removeItem('certificates', i)}>
-                      O'chirish
-                    </button>
                   </div>
                 ))}
                 <button className="btn btn-outline" onClick={() => addItem('certificates')}>
