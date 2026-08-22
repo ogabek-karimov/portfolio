@@ -10,6 +10,7 @@ function CertificatesPage() {
   const { certificates } = dict
   const [items, setItems] = useState(null)
   const [isCustom, setIsCustom] = useState(false)
+  const [selectedCert, setSelectedCert] = useState(null)
 
   useEffect(() => {
     let cancelled = false
@@ -40,6 +41,15 @@ function CertificatesPage() {
     }
   }, [lang, certificates.items])
 
+  useEffect(() => {
+    if (!selectedCert) return
+    function handleKey(e) {
+      if (e.key === 'Escape') setSelectedCert(null)
+    }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [selectedCert])
+
   return (
     <section className="subpage">
       <div className="container">
@@ -54,7 +64,11 @@ function CertificatesPage() {
         {items && (
           <div className="cert-grid">
             {items.map((cert, i) => (
-              <div className="cert-card" key={i}>
+              <div
+                className={`cert-card ${cert.imageId ? 'clickable' : ''}`}
+                key={i}
+                onClick={() => cert.imageId && setSelectedCert(cert)}
+              >
                 {cert.imageId ? (
                   <img
                     src={`${API_URL}/cert-image/${cert.imageId}`}
@@ -72,6 +86,31 @@ function CertificatesPage() {
           </div>
         )}
       </div>
+
+      {selectedCert && (
+        <div className="cert-modal-overlay" onClick={() => setSelectedCert(null)}>
+          <div className="cert-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="cert-modal-close"
+              onClick={() => setSelectedCert(null)}
+              aria-label="Yopish"
+            >
+              ✕
+            </button>
+            <img
+              src={`${API_URL}/cert-image/${selectedCert.imageId}`}
+              alt={selectedCert.title}
+              className="cert-modal-image"
+            />
+            <div className="cert-modal-info">
+              <h2>{selectedCert.title}</h2>
+              <p className="cert-modal-issuer">{selectedCert.issuer}</p>
+              <span className="cert-date">{selectedCert.date}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
