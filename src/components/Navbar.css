@@ -77,8 +77,7 @@
   transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
 }
 
-.nav-dropdown:hover .nav-dropdown-menu,
-.nav-dropdown:focus-within .nav-dropdown-menu {
+.nav-dropdown-menu.open {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);

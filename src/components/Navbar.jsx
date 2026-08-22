@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeContext'
 import { useAdminAuth } from '../admin/AdminAuthContext'
@@ -7,12 +7,19 @@ import './Navbar.css'
 
 function Navbar() {
   const [open, setOpen] = useState(false)
+  const [aboutOpen, setAboutOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const profileRef = useRef(null)
   const { lang, setLang, dict } = useLanguage()
   const { theme, toggleTheme } = useTheme()
   const { isAdmin, logout } = useAdminAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    setAboutOpen(false)
+    setOpen(false)
+  }, [location])
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -49,13 +56,24 @@ function Navbar() {
         </Link>
 
         <nav className={`nav-links ${open ? 'open' : ''}`}>
-          <div className="nav-dropdown">
+          <div
+            className="nav-dropdown"
+            onMouseEnter={() => setAboutOpen(true)}
+            onMouseLeave={() => setAboutOpen(false)}
+          >
             <Link to="/#about" onClick={() => setOpen(false)}>
               {dict.nav.about}
             </Link>
-            <div className="nav-dropdown-menu">
+            <div className={`nav-dropdown-menu ${aboutOpen ? 'open' : ''}`}>
               {aboutSubLinks.map((link) => (
-                <Link key={link.href} to={link.href} onClick={() => setOpen(false)}>
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  onClick={() => {
+                    setOpen(false)
+                    setAboutOpen(false)
+                  }}
+                >
                   {link.label}
                 </Link>
               ))}

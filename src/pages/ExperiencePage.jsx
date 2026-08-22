@@ -8,18 +8,29 @@ const API_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
 function ExperiencePage() {
   const { lang, dict } = useLanguage()
   const { experience } = dict
-  const [items, setItems] = useState(experience.items)
+  const [items, setItems] = useState(null)
 
   useEffect(() => {
-    setItems(experience.items)
+    let cancelled = false
+    setItems(null)
+
     fetch(`${API_URL}/content`)
       .then((r) => r.json())
       .then((data) => {
+        if (cancelled) return
         if (data.experience && Array.isArray(data.experience[lang]) && data.experience[lang].length > 0) {
           setItems(data.experience[lang])
+        } else {
+          setItems(experience.items)
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        if (!cancelled) setItems(experience.items)
+      })
+
+    return () => {
+      cancelled = true
+    }
   }, [lang, experience.items])
 
   return (
@@ -32,19 +43,21 @@ function ExperiencePage() {
         <h1 className="section-title">{experience.title}</h1>
         <p className="section-subtitle">{experience.subtitle}</p>
 
-        <div className="timeline">
-          {items.map((item, i) => (
-            <div className="timeline-item" key={i}>
-              <div className="timeline-dot" />
-              <div className="timeline-content">
-                <span className="timeline-date">{item.date}</span>
-                <h3>{item.title}</h3>
-                <p className="timeline-place">{item.place}</p>
-                <p>{item.desc}</p>
+        {items && (
+          <div className="timeline">
+            {items.map((item, i) => (
+              <div className="timeline-item" key={i}>
+                <div className="timeline-dot" />
+                <div className="timeline-content">
+                  <span className="timeline-date">{item.date}</span>
+                  <h3>{item.title}</h3>
+                  <p className="timeline-place">{item.place}</p>
+                  <p>{item.desc}</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )

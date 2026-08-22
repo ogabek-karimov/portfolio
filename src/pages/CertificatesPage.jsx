@@ -8,15 +8,18 @@ const API_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
 function CertificatesPage() {
   const { lang, dict } = useLanguage()
   const { certificates } = dict
-  const [items, setItems] = useState(certificates.items)
+  const [items, setItems] = useState(null)
   const [isCustom, setIsCustom] = useState(false)
 
   useEffect(() => {
-    setItems(certificates.items)
+    let cancelled = false
+    setItems(null)
     setIsCustom(false)
+
     fetch(`${API_URL}/content`)
       .then((r) => r.json())
       .then((data) => {
+        if (cancelled) return
         if (
           data.certificates &&
           Array.isArray(data.certificates[lang]) &&
@@ -24,9 +27,17 @@ function CertificatesPage() {
         ) {
           setItems(data.certificates[lang])
           setIsCustom(true)
+        } else {
+          setItems(certificates.items)
         }
       })
-      .catch(() => {})
+      .catch(() => {
+        if (!cancelled) setItems(certificates.items)
+      })
+
+    return () => {
+      cancelled = true
+    }
   }, [lang, certificates.items])
 
   return (
@@ -38,26 +49,28 @@ function CertificatesPage() {
 
         <h1 className="section-title">{certificates.title}</h1>
         <p className="section-subtitle">{certificates.subtitle}</p>
-        {!isCustom && <p className="placeholder-note">{certificates.note}</p>}
+        {items && !isCustom && <p className="placeholder-note">{certificates.note}</p>}
 
-        <div className="cert-grid">
-          {items.map((cert, i) => (
-            <div className="cert-card" key={i}>
-              {cert.imageId ? (
-                <img
-                  src={`${API_URL}/cert-image/${cert.imageId}`}
-                  alt={cert.title}
-                  className="cert-icon-img"
-                />
-              ) : (
-                <div className="cert-icon">🏅</div>
-              )}
-              <h3>{cert.title}</h3>
-              <p className="cert-issuer">{cert.issuer}</p>
-              <span className="cert-date">{cert.date}</span>
-            </div>
-          ))}
-        </div>
+        {items && (
+          <div className="cert-grid">
+            {items.map((cert, i) => (
+              <div className="cert-card" key={i}>
+                {cert.imageId ? (
+                  <img
+                    src={`${API_URL}/cert-image/${cert.imageId}`}
+                    alt={cert.title}
+                    className="cert-icon-img"
+                  />
+                ) : (
+                  <div className="cert-icon">🏅</div>
+                )}
+                <h3>{cert.title}</h3>
+                <p className="cert-issuer">{cert.issuer}</p>
+                <span className="cert-date">{cert.date}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )
