@@ -164,6 +164,11 @@ const translations = {
       resumeUploadedMsg: 'Rezyume yuklandi ✓',
       savedMsg: 'Saqlandi ✓',
       errorPrefix: 'Xato:',
+      hideLabel: 'Foydalanuvchilardan berkitish',
+      showLabel: 'Foydalanuvchilarga ko\'rsatish',
+      hiddenBadge: 'Yashiringan',
+      pdfUploadNote:
+        "Diqqat: bu faqat PDF faylni almashtiradi — /resume sahifasidagi (yuqoridagi kartochkada tahrirlagan) ma'lumotlarga hech qanday ta'sir qilmaydi.",
     },
   },
   ru: {
@@ -330,6 +335,11 @@ const translations = {
       resumeUploadedMsg: 'Резюме загружено ✓',
       savedMsg: 'Сохранено ✓',
       errorPrefix: 'Ошибка:',
+      hideLabel: 'Скрыть от пользователей',
+      showLabel: 'Показать пользователям',
+      hiddenBadge: 'Скрыто',
+      pdfUploadNote:
+        'Внимание: это заменяет только PDF-файл — на данные страницы /resume (которые вы редактируете выше) это никак не влияет.',
     },
   },
 }

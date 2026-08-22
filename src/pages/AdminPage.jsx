@@ -6,16 +6,37 @@ import './AdminPage.css'
 
 const API_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
 
-const EMPTY_EXPERIENCE_ITEM = { date: '', title: '', place: '', desc: '' }
-const EMPTY_CERT_ITEM = { title: '', issuer: '', date: '', imageId: '' }
+const EMPTY_EXPERIENCE_ITEM = { date: '', title: '', place: '', desc: '', hidden: false }
+const EMPTY_CERT_ITEM = { title: '', issuer: '', date: '', imageId: '', hidden: false }
+
+function EyeIcon({ hidden }) {
+  if (hidden) {
+    return (
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    )
+  }
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+        <line x1="1" y1="1" x2="23" y2="23" />
+    </svg>
+  )
+}
 
 const DEFAULT_CONTENT = {
-  experience: { uz: translations.uz.experience.items, ru: translations.ru.experience.items },
+  experience: {
+    uz: translations.uz.experience.items.map((i) => ({ ...i, hidden: false })),
+    ru: translations.ru.experience.items.map((i) => ({ ...i, hidden: false })),
+  },
   certificates: {
-    uz: translations.uz.certificates.items.map((c) => ({ ...c, imageId: '' })),
-    ru: translations.ru.certificates.items.map((c) => ({ ...c, imageId: '' })),
+    uz: translations.uz.certificates.items.map((c) => ({ ...c, imageId: '', hidden: false })),
+    ru: translations.ru.certificates.items.map((c) => ({ ...c, imageId: '', hidden: false })),
   },
   resume: {
+    hidden: false,
     contact: {
       email: 'bek8896ok@gmail.com',
       telegram: 't.me/bek_xacker',
@@ -79,7 +100,11 @@ function AdminPage() {
             ? data.certificates
             : DEFAULT_CONTENT.certificates,
         )
-        setResume(data.resume && data.resume.contact ? data.resume : DEFAULT_CONTENT.resume)
+        setResume(
+          data.resume && data.resume.contact
+            ? { ...data.resume, hidden: Boolean(data.resume.hidden) }
+            : DEFAULT_CONTENT.resume,
+        )
         setLoaded(true)
       })
   }, [isAdmin])
@@ -185,6 +210,19 @@ function AdminPage() {
 
   function updateResumeContact(field, value) {
     setResume((prev) => ({ ...prev, contact: { ...prev.contact, [field]: value } }))
+  }
+
+  function toggleResumeHidden() {
+    setResume((prev) => ({ ...prev, hidden: !prev.hidden }))
+  }
+
+  function toggleItemHidden(section, index) {
+    const setter = section === 'experience' ? setExperience : setCertificates
+    setter((prev) => {
+      const list = [...prev[editLang]]
+      list[index] = { ...list[index], hidden: !list[index].hidden }
+      return { ...prev, [editLang]: list }
+    })
   }
 
   async function uploadCertImage(index, file) {
@@ -311,22 +349,33 @@ function AdminPage() {
               <div className="admin-list">
                 {experience[editLang].map((item, i) => (
                   <div
-                    className={`admin-item ${highlightIndex === i ? 'highlight' : ''}`}
+                    className={`admin-item ${highlightIndex === i ? 'highlight' : ''} ${item.hidden ? 'is-hidden' : ''}`}
                     key={i}
                     ref={(el) => (itemRefs.current[i] = el)}
                   >
                     <div className="admin-item-head">
                       <span>
                         {t.entryLabel} №{i + 1}
+                        {item.hidden && <span className="hidden-badge">{t.hiddenBadge}</span>}
                       </span>
-                      <button
-                        type="button"
-                        className="icon-btn"
-                        title={t.deleteLabel}
-                        onClick={() => removeItem('experience', i)}
-                      >
-                        🗑️
-                      </button>
+                      <div className="admin-item-actions">
+                        <button
+                          type="button"
+                          className="icon-btn"
+                          title={item.hidden ? t.showLabel : t.hideLabel}
+                          onClick={() => toggleItemHidden('experience', i)}
+                        >
+                          <EyeIcon hidden={item.hidden} />
+                        </button>
+                        <button
+                          type="button"
+                          className="icon-btn"
+                          title={t.deleteLabel}
+                          onClick={() => removeItem('experience', i)}
+                        >
+                          🗑️
+                        </button>
+                      </div>
                     </div>
                     <input
                       placeholder={t.datePlaceholder}
@@ -364,22 +413,33 @@ function AdminPage() {
               <div className="admin-list">
                 {certificates[editLang].map((item, i) => (
                   <div
-                    className={`admin-item ${highlightIndex === i ? 'highlight' : ''}`}
+                    className={`admin-item ${highlightIndex === i ? 'highlight' : ''} ${item.hidden ? 'is-hidden' : ''}`}
                     key={i}
                     ref={(el) => (itemRefs.current[i] = el)}
                   >
                     <div className="admin-item-head">
                       <span>
                         {t.certLabel} №{i + 1}
+                        {item.hidden && <span className="hidden-badge">{t.hiddenBadge}</span>}
                       </span>
-                      <button
-                        type="button"
-                        className="icon-btn"
-                        title={t.deleteLabel}
-                        onClick={() => removeItem('certificates', i)}
-                      >
-                        🗑️
-                      </button>
+                      <div className="admin-item-actions">
+                        <button
+                          type="button"
+                          className="icon-btn"
+                          title={item.hidden ? t.showLabel : t.hideLabel}
+                          onClick={() => toggleItemHidden('certificates', i)}
+                        >
+                          <EyeIcon hidden={item.hidden} />
+                        </button>
+                        <button
+                          type="button"
+                          className="icon-btn"
+                          title={t.deleteLabel}
+                          onClick={() => removeItem('certificates', i)}
+                        >
+                          🗑️
+                        </button>
+                      </div>
                     </div>
 
                     <div className="cert-image-row">
@@ -431,11 +491,20 @@ function AdminPage() {
 
             {tab === 'resume' && (
               <div className="admin-resume-tabs">
-                <div className="admin-item admin-resume-card">
+                <div className={`admin-item admin-resume-card ${resume.hidden ? 'is-hidden' : ''}`}>
                   <div className="admin-item-head">
                     <span>
                       {t.resumeCardTitlePrefix} ({editLang.toUpperCase()})
+                      {resume.hidden && <span className="hidden-badge">{t.hiddenBadge}</span>}
                     </span>
+                    <button
+                      type="button"
+                      className="icon-btn"
+                      title={resume.hidden ? t.showLabel : t.hideLabel}
+                      onClick={toggleResumeHidden}
+                    >
+                      <EyeIcon hidden={resume.hidden} />
+                    </button>
                   </div>
                   <p className="admin-resume-hint">{t.resumeHint}</p>
                   <input
@@ -489,6 +558,7 @@ function AdminPage() {
                     <span>{t.pdfCardTitle}</span>
                   </div>
                   <p className="admin-resume-hint">{t.pdfHint}</p>
+                  <p className="admin-resume-note">{t.pdfUploadNote}</p>
                   <label className="upload-btn">
                     {t.chooseFileBtn}
                     <input type="file" accept="application/pdf" hidden onChange={uploadResume} />

@@ -19,7 +19,7 @@ function ExperiencePage() {
       .then((data) => {
         if (cancelled) return
         if (data.experience && Array.isArray(data.experience[lang]) && data.experience[lang].length > 0) {
-          setItems(data.experience[lang])
+          setItems(data.experience[lang].filter((item) => !item.hidden))
         } else {
           setItems(experience.items)
         }

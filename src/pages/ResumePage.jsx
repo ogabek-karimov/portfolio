@@ -36,6 +36,7 @@ const LABELS = {
     skills: "Ko'nikmalar",
     experience: "Ta'lim va tajriba",
     projects: 'Loyihalar',
+    unavailable: 'Rezyume hozircha mavjud emas.',
   },
   ru: {
     backLink: '← Вернуться на главную',
@@ -45,6 +46,7 @@ const LABELS = {
     skills: 'Навыки',
     experience: 'Образование и опыт',
     projects: 'Проекты',
+    unavailable: 'Резюме пока недоступно.',
   },
 }
 
@@ -61,7 +63,7 @@ function ResumePage() {
         if (cancelled) return
         setResume(data.resume && data.resume.contact ? data.resume : DEFAULT_RESUME)
         if (data.experience && Array.isArray(data.experience[lang]) && data.experience[lang].length > 0) {
-          setExperienceItems(data.experience[lang])
+          setExperienceItems(data.experience[lang].filter((item) => !item.hidden))
         } else {
           setExperienceItems(dict.experience.items)
         }
@@ -83,6 +85,19 @@ function ResumePage() {
   if (!resume) return null
 
   const p = resume[lang]
+
+  if (resume.hidden) {
+    return (
+      <section className="resume-page">
+        <div className="resume-toolbar no-print">
+          <Link to="/" className="back-link">
+            {t.backLink}
+          </Link>
+        </div>
+        <p className="resume-unavailable">{t.unavailable}</p>
+      </section>
+    )
+  }
 
   return (
     <section className="resume-page">

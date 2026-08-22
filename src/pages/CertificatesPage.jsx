@@ -26,7 +26,7 @@ function CertificatesPage() {
           Array.isArray(data.certificates[lang]) &&
           data.certificates[lang].length > 0
         ) {
-          setItems(data.certificates[lang])
+          setItems(data.certificates[lang].filter((item) => !item.hidden))
           setIsCustom(true)
         } else {
           setItems(certificates.items)

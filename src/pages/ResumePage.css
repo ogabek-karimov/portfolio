@@ -183,3 +183,10 @@
     max-width: 100%;
   }
 }
+
+.resume-unavailable {
+  text-align: center;
+  color: var(--text);
+  padding: 60px 20px;
+  font-size: 15px;
+}
