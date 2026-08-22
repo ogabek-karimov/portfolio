@@ -123,6 +123,81 @@
   gap: 2px;
 }
 
+.profile-menu {
+  position: relative;
+}
+
+.profile-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-alt);
+  cursor: pointer;
+  font-size: 15px;
+  padding: 0;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 8px;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 60;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+}
+
+.profile-info strong {
+  font-size: 13px;
+  color: var(--text-h);
+}
+
+.profile-info span {
+  font-size: 12px;
+  color: var(--text);
+}
+
+.profile-dropdown a,
+.profile-dropdown button {
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text-h);
+}
+
+.profile-dropdown a:hover,
+.profile-dropdown button:hover {
+  background: var(--bg-alt);
+}
+
+.logout-btn {
+  color: #f87171 !important;
+}
+
 .lang-switch button {
   border: none;
   background: none;

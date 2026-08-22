@@ -43,7 +43,15 @@ function CertificatesPage() {
         <div className="cert-grid">
           {items.map((cert, i) => (
             <div className="cert-card" key={i}>
-              <div className="cert-icon">🏅</div>
+              {cert.imageId ? (
+                <img
+                  src={`${API_URL}/cert-image/${cert.imageId}`}
+                  alt={cert.title}
+                  className="cert-icon-img"
+                />
+              ) : (
+                <div className="cert-icon">🏅</div>
+              )}
               <h3>{cert.title}</h3>
               <p className="cert-issuer">{cert.issuer}</p>
               <span className="cert-date">{cert.date}</span>

@@ -1,43 +1,64 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLanguage } from '../i18n/LanguageContext'
+import { useAdminAuth } from '../admin/AdminAuthContext'
+import translations from '../i18n/translations'
 import './AdminPage.css'
 
 const API_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
-const TOKEN_KEY = 'admin-token'
 
 const EMPTY_EXPERIENCE_ITEM = { date: '', title: '', place: '', desc: '' }
-const EMPTY_CERT_ITEM = { title: '', issuer: '', date: '' }
+const EMPTY_CERT_ITEM = { title: '', issuer: '', date: '', imageId: '' }
+
+const DEFAULT_CONTENT = {
+  experience: { uz: translations.uz.experience.items, ru: translations.ru.experience.items },
+  certificates: {
+    uz: translations.uz.certificates.items.map((c) => ({ ...c, imageId: '' })),
+    ru: translations.ru.certificates.items.map((c) => ({ ...c, imageId: '' })),
+  },
+}
 
 function AdminPage() {
-  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || '')
+  const { lang } = useLanguage()
+  const { isAdmin, login } = useAdminAuth()
+
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
   const [step, setStep] = useState('phone')
   const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState(false)
 
-  const [editLang, setEditLang] = useState('uz')
+  const editLang = lang
   const [tab, setTab] = useState('experience')
-  const [experience, setExperience] = useState({ uz: [], ru: [] })
-  const [certificates, setCertificates] = useState({ uz: [], ru: [] })
+  const [experience, setExperience] = useState(DEFAULT_CONTENT.experience)
+  const [certificates, setCertificates] = useState(DEFAULT_CONTENT.certificates)
   const [loaded, setLoaded] = useState(false)
   const [saveMsg, setSaveMsg] = useState('')
   const [highlightIndex, setHighlightIndex] = useState(null)
   const itemRefs = useRef({})
+  const [uploadingIndex, setUploadingIndex] = useState(null)
 
   useEffect(() => {
     setHighlightIndex(null)
   }, [tab, editLang])
 
   useEffect(() => {
-    if (!token) return
+    if (!isAdmin) return
     fetch(`${API_URL}/content`)
       .then((r) => r.json())
       .then((data) => {
-        setExperience(data.experience || { uz: [], ru: [] })
-        setCertificates(data.certificates || { uz: [], ru: [] })
+        setExperience(
+          data.experience && (data.experience.uz.length || data.experience.ru.length)
+            ? data.experience
+            : DEFAULT_CONTENT.experience,
+        )
+        setCertificates(
+          data.certificates && (data.certificates.uz.length || data.certificates.ru.length)
+            ? data.certificates
+            : DEFAULT_CONTENT.certificates,
+        )
         setLoaded(true)
       })
-  }, [token])
+  }, [isAdmin])
 
   async function requestOtp(e) {
     e.preventDefault()
@@ -52,7 +73,7 @@ function AdminPage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Xatolik')
       setStep('otp')
-      setMsg("Kod Telegram botga yuborildi")
+      setMsg('Kod Telegram botga yuborildi')
     } catch (err) {
       setMsg(err.message)
     } finally {
@@ -72,21 +93,12 @@ function AdminPage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Xatolik')
-      localStorage.setItem(TOKEN_KEY, data.token)
-      setToken(data.token)
+      login(data.token)
     } catch (err) {
       setMsg(err.message)
     } finally {
       setBusy(false)
     }
-  }
-
-  function logout() {
-    localStorage.removeItem(TOKEN_KEY)
-    setToken('')
-    setStep('phone')
-    setPhone('')
-    setCode('')
   }
 
   function updateItem(section, index, field, value) {
@@ -120,6 +132,7 @@ function AdminPage() {
   async function saveSection(section) {
     setSaveMsg('Saqlanmoqda...')
     const data = section === 'experience' ? experience : certificates
+    const token = localStorage.getItem('admin-token')
     try {
       const res = await fetch(`${API_URL}/content`, {
         method: 'PUT',
@@ -135,10 +148,32 @@ function AdminPage() {
     setTimeout(() => setSaveMsg(''), 3000)
   }
 
+  async function uploadCertImage(index, file) {
+    if (!file) return
+    setUploadingIndex(index)
+    const token = localStorage.getItem('admin-token')
+    try {
+      const res = await fetch(`${API_URL}/admin/cert-image`, {
+        method: 'POST',
+        headers: { 'Content-Type': file.type, Authorization: `Bearer ${token}` },
+        body: file,
+      })
+      const result = await res.json()
+      if (!res.ok) throw new Error(result.error || 'Xatolik')
+      updateItem('certificates', index, 'imageId', result.id)
+    } catch (err) {
+      setSaveMsg('Xato: ' + err.message)
+      setTimeout(() => setSaveMsg(''), 3000)
+    } finally {
+      setUploadingIndex(null)
+    }
+  }
+
   async function uploadResume(e) {
     const file = e.target.files[0]
     if (!file) return
     setSaveMsg('Yuklanmoqda...')
+    const token = localStorage.getItem('admin-token')
     try {
       const res = await fetch(`${API_URL}/admin/resume`, {
         method: 'POST',
@@ -154,7 +189,7 @@ function AdminPage() {
     setTimeout(() => setSaveMsg(''), 3000)
   }
 
-  if (!token) {
+  if (!isAdmin) {
     return (
       <section className="admin-login">
         <div className="admin-login-card">
@@ -207,9 +242,6 @@ function AdminPage() {
       <div className="container">
         <div className="admin-header">
           <h1>Admin panel</h1>
-          <button className="btn btn-outline" onClick={logout}>
-            Chiqish
-          </button>
         </div>
 
         <div className="admin-toolbar">
@@ -226,14 +258,10 @@ function AdminPage() {
           </div>
 
           {tab !== 'resume' && (
-            <div className="admin-lang-switch">
-              <button className={editLang === 'uz' ? 'active' : ''} onClick={() => setEditLang('uz')}>
-                UZ
-              </button>
-              <button className={editLang === 'ru' ? 'active' : ''} onClick={() => setEditLang('ru')}>
-                RU
-              </button>
-            </div>
+            <p className="admin-edit-lang-note">
+              Hozir <strong>{editLang.toUpperCase()}</strong> tili tahrirlanmoqda — tilni yuqoridagi
+              navbar'dan almashtiring
+            </p>
           )}
         </div>
 
@@ -311,6 +339,28 @@ function AdminPage() {
                         🗑️
                       </button>
                     </div>
+
+                    <div className="cert-image-row">
+                      {item.imageId ? (
+                        <img
+                          src={`${API_URL}/cert-image/${item.imageId}`}
+                          alt=""
+                          className="cert-image-preview"
+                        />
+                      ) : (
+                        <div className="cert-image-placeholder">🏅</div>
+                      )}
+                      <label className="upload-btn">
+                        {uploadingIndex === i ? 'Yuklanmoqda...' : "Rasm yuklash"}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          hidden
+                          onChange={(e) => uploadCertImage(i, e.target.files[0])}
+                        />
+                      </label>
+                    </div>
+
                     <input
                       placeholder="Sertifikat nomi"
                       value={item.title}

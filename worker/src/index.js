@@ -238,6 +238,43 @@ async function handleGetResume(env) {
   })
 }
 
+async function handleGetCertImage(env, id) {
+  const [bytes, type] = await Promise.all([
+    env.SITE_CONTENT.get(`cert-image:${id}`, { type: 'arrayBuffer' }),
+    env.SITE_CONTENT.get(`cert-image-type:${id}`),
+  ])
+  if (!bytes) return json({ error: 'Not found' }, 404, {})
+
+  return new Response(bytes, {
+    headers: {
+      'Content-Type': type || 'image/jpeg',
+      'Cache-Control': 'public, max-age=31536000',
+      'Access-Control-Allow-Origin': '*',
+    },
+  })
+}
+
+async function handlePostCertImage(request, env, headers) {
+  const authed = await requireSession(request, env)
+  if (!authed) return json({ error: 'Unauthorized' }, 401, headers)
+
+  const contentType = request.headers.get('Content-Type') || 'image/jpeg'
+  if (!contentType.startsWith('image/')) {
+    return json({ error: "Faqat rasm fayllari qabul qilinadi" }, 400, headers)
+  }
+
+  const buf = await request.arrayBuffer()
+  if (!buf.byteLength || buf.byteLength > 8 * 1024 * 1024) {
+    return json({ error: "Noto'g'ri fayl hajmi (8MB dan katta bo'lmasin)" }, 400, headers)
+  }
+
+  const id = crypto.randomUUID()
+  await env.SITE_CONTENT.put(`cert-image:${id}`, buf)
+  await env.SITE_CONTENT.put(`cert-image-type:${id}`, contentType)
+
+  return json({ id }, 200, headers)
+}
+
 async function handlePostResume(request, env, headers) {
   const authed = await requireSession(request, env)
   if (!authed) return json({ error: 'Unauthorized' }, 401, headers)
@@ -283,6 +320,15 @@ export default {
 
     if (url.pathname === '/admin/resume' && request.method === 'POST') {
       return handlePostResume(request, env, headers)
+    }
+
+    if (url.pathname === '/admin/cert-image' && request.method === 'POST') {
+      return handlePostCertImage(request, env, headers)
+    }
+
+    if (url.pathname.startsWith('/cert-image/') && request.method === 'GET') {
+      const id = url.pathname.slice('/cert-image/'.length)
+      return handleGetCertImage(env, id)
     }
 
     if ((url.pathname === '/' || url.pathname === '') && request.method === 'POST') {
