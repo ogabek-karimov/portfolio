@@ -39,7 +39,8 @@ const DEFAULT_CONTENT = {
 }
 
 function AdminPage() {
-  const { lang } = useLanguage()
+  const { lang, dict } = useLanguage()
+  const t = dict.admin
   const { isAdmin, login } = useAdminAuth()
 
   const [phone, setPhone] = useState('')
@@ -94,9 +95,8 @@ function AdminPage() {
         body: JSON.stringify({ phone }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Xatolik')
+      if (!res.ok) throw new Error(data.error || 'Error')
       setStep('otp')
-      setMsg('Kod Telegram botga yuborildi')
     } catch (err) {
       setMsg(err.message)
     } finally {
@@ -115,7 +115,7 @@ function AdminPage() {
         body: JSON.stringify({ phone, code }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Xatolik')
+      if (!res.ok) throw new Error(data.error || 'Error')
       login(data.token)
     } catch (err) {
       setMsg(err.message)
@@ -153,7 +153,7 @@ function AdminPage() {
   }
 
   async function saveSection(section) {
-    setSaveMsg('Saqlanmoqda...')
+    setSaveMsg(t.loading)
     const data = section === 'experience' ? experience : section === 'certificates' ? certificates : resume
     const token = localStorage.getItem('admin-token')
     try {
@@ -163,10 +163,10 @@ function AdminPage() {
         body: JSON.stringify({ section, data }),
       })
       const result = await res.json()
-      if (!res.ok) throw new Error(result.error || 'Xatolik')
-      setSaveMsg('Saqlandi ✓')
+      if (!res.ok) throw new Error(result.error || 'Error')
+      setSaveMsg(t.savedMsg)
     } catch (err) {
-      setSaveMsg('Xato: ' + err.message)
+      setSaveMsg(`${t.errorPrefix} ${err.message}`)
     }
     setTimeout(() => setSaveMsg(''), 3000)
   }
@@ -198,10 +198,10 @@ function AdminPage() {
         body: file,
       })
       const result = await res.json()
-      if (!res.ok) throw new Error(result.error || 'Xatolik')
+      if (!res.ok) throw new Error(result.error || 'Error')
       updateItem('certificates', index, 'imageId', result.id)
     } catch (err) {
-      setSaveMsg('Xato: ' + err.message)
+      setSaveMsg(`${t.errorPrefix} ${err.message}`)
       setTimeout(() => setSaveMsg(''), 3000)
     } finally {
       setUploadingIndex(null)
@@ -211,7 +211,7 @@ function AdminPage() {
   async function uploadResume(e) {
     const file = e.target.files[0]
     if (!file) return
-    setSaveMsg('Yuklanmoqda...')
+    setSaveMsg(t.loading)
     const token = localStorage.getItem('admin-token')
     try {
       const res = await fetch(`${API_URL}/admin/resume`, {
@@ -220,10 +220,10 @@ function AdminPage() {
         body: file,
       })
       const result = await res.json()
-      if (!res.ok) throw new Error(result.error || 'Xatolik')
-      setSaveMsg('Rezyume yuklandi ✓')
+      if (!res.ok) throw new Error(result.error || 'Error')
+      setSaveMsg(t.resumeUploadedMsg)
     } catch (err) {
-      setSaveMsg('Xato: ' + err.message)
+      setSaveMsg(`${t.errorPrefix} ${err.message}`)
     }
     setTimeout(() => setSaveMsg(''), 3000)
   }
@@ -232,12 +232,12 @@ function AdminPage() {
     return (
       <section className="admin-login">
         <div className="admin-login-card">
-          <h1>Admin panel</h1>
+          <h1>{t.loginTitle}</h1>
 
           {step === 'phone' && (
             <form onSubmit={requestOtp}>
               <label>
-                Telefon raqam
+                {t.phoneLabel}
                 <input
                   type="tel"
                   placeholder="+998901234567"
@@ -247,7 +247,7 @@ function AdminPage() {
                 />
               </label>
               <button type="submit" className="btn btn-primary" disabled={busy}>
-                {busy ? 'Yuborilmoqda...' : 'Kod olish'}
+                {busy ? t.sendingBtn : t.getCodeBtn}
               </button>
             </form>
           )}
@@ -255,7 +255,7 @@ function AdminPage() {
           {step === 'otp' && (
             <form onSubmit={verifyOtp}>
               <label>
-                Telegram'dan kelgan kod
+                {t.codeLabel}
                 <input
                   type="text"
                   placeholder="123456"
@@ -265,7 +265,7 @@ function AdminPage() {
                 />
               </label>
               <button type="submit" className="btn btn-primary" disabled={busy}>
-                {busy ? 'Tekshirilmoqda...' : 'Kirish'}
+                {busy ? t.verifyingBtn : t.loginBtn}
               </button>
             </form>
           )}
@@ -280,32 +280,31 @@ function AdminPage() {
     <section className="admin-dashboard">
       <div className="container">
         <div className="admin-header">
-          <h1>Admin panel</h1>
+          <h1>{t.panelTitle}</h1>
         </div>
 
         <div className="admin-toolbar">
           <div className="admin-tabs">
             <button className={tab === 'experience' ? 'active' : ''} onClick={() => setTab('experience')}>
-              Ta'lim va tajriba
+              {t.tabExperience}
             </button>
             <button className={tab === 'certificates' ? 'active' : ''} onClick={() => setTab('certificates')}>
-              Sertifikatlar
+              {t.tabCertificates}
             </button>
             <button className={tab === 'resume' ? 'active' : ''} onClick={() => setTab('resume')}>
-              Rezyume
+              {t.tabResume}
             </button>
           </div>
 
           {tab !== 'resume' && (
             <p className="admin-edit-lang-note">
-              Hozir <strong>{editLang.toUpperCase()}</strong> tili tahrirlanmoqda — tilni yuqoridagi
-              navbar'dan almashtiring
+              {t.editingNotePrefix} <strong>{editLang.toUpperCase()}</strong> {t.editingNoteSuffix}
             </p>
           )}
         </div>
 
         {!loaded ? (
-          <p>Yuklanmoqda...</p>
+          <p>{t.loading}</p>
         ) : (
           <>
             {tab === 'experience' && (
@@ -317,33 +316,35 @@ function AdminPage() {
                     ref={(el) => (itemRefs.current[i] = el)}
                   >
                     <div className="admin-item-head">
-                      <span>Yozuv №{i + 1}</span>
+                      <span>
+                        {t.entryLabel} №{i + 1}
+                      </span>
                       <button
                         type="button"
                         className="icon-btn"
-                        title="O'chirish"
+                        title={t.deleteLabel}
                         onClick={() => removeItem('experience', i)}
                       >
                         🗑️
                       </button>
                     </div>
                     <input
-                      placeholder="Sana (masalan: 2025)"
+                      placeholder={t.datePlaceholder}
                       value={item.date}
                       onChange={(e) => updateItem('experience', i, 'date', e.target.value)}
                     />
                     <input
-                      placeholder="Sarlavha"
+                      placeholder={t.titlePlaceholder}
                       value={item.title}
                       onChange={(e) => updateItem('experience', i, 'title', e.target.value)}
                     />
                     <input
-                      placeholder="Joy"
+                      placeholder={t.placePlaceholder}
                       value={item.place}
                       onChange={(e) => updateItem('experience', i, 'place', e.target.value)}
                     />
                     <textarea
-                      placeholder="Tavsif"
+                      placeholder={t.descPlaceholder}
                       rows="2"
                       value={item.desc}
                       onChange={(e) => updateItem('experience', i, 'desc', e.target.value)}
@@ -351,10 +352,10 @@ function AdminPage() {
                   </div>
                 ))}
                 <button className="btn btn-outline" onClick={() => addItem('experience')}>
-                  + Yangi qator qo'shish
+                  {t.addExperienceBtn}
                 </button>
                 <button className="btn btn-primary" onClick={() => saveSection('experience')}>
-                  Saqlash
+                  {t.saveBtn}
                 </button>
               </div>
             )}
@@ -368,11 +369,13 @@ function AdminPage() {
                     ref={(el) => (itemRefs.current[i] = el)}
                   >
                     <div className="admin-item-head">
-                      <span>Sertifikat №{i + 1}</span>
+                      <span>
+                        {t.certLabel} №{i + 1}
+                      </span>
                       <button
                         type="button"
                         className="icon-btn"
-                        title="O'chirish"
+                        title={t.deleteLabel}
                         onClick={() => removeItem('certificates', i)}
                       >
                         🗑️
@@ -390,7 +393,7 @@ function AdminPage() {
                         <div className="cert-image-placeholder">🏅</div>
                       )}
                       <label className="upload-btn">
-                        {uploadingIndex === i ? 'Yuklanmoqda...' : "Rasm yuklash"}
+                        {uploadingIndex === i ? t.uploadingLabel : t.uploadImageBtn}
                         <input
                           type="file"
                           accept="image/*"
@@ -401,27 +404,27 @@ function AdminPage() {
                     </div>
 
                     <input
-                      placeholder="Sertifikat nomi"
+                      placeholder={t.certTitlePlaceholder}
                       value={item.title}
                       onChange={(e) => updateItem('certificates', i, 'title', e.target.value)}
                     />
                     <input
-                      placeholder="Bergan tashkilot"
+                      placeholder={t.certIssuerPlaceholder}
                       value={item.issuer}
                       onChange={(e) => updateItem('certificates', i, 'issuer', e.target.value)}
                     />
                     <input
-                      placeholder="Sana"
+                      placeholder={t.certDatePlaceholder}
                       value={item.date}
                       onChange={(e) => updateItem('certificates', i, 'date', e.target.value)}
                     />
                   </div>
                 ))}
                 <button className="btn btn-outline" onClick={() => addItem('certificates')}>
-                  + Yangi sertifikat qo'shish
+                  {t.addCertBtn}
                 </button>
                 <button className="btn btn-primary" onClick={() => saveSection('certificates')}>
-                  Saqlash
+                  {t.saveBtn}
                 </button>
               </div>
             )}
@@ -430,67 +433,66 @@ function AdminPage() {
               <div className="admin-resume-tabs">
                 <div className="admin-item admin-resume-card">
                   <div className="admin-item-head">
-                    <span>Rezyume ma'lumotlari ({editLang.toUpperCase()})</span>
+                    <span>
+                      {t.resumeCardTitlePrefix} ({editLang.toUpperCase()})
+                    </span>
                   </div>
-                  <p className="admin-resume-hint">
-                    Bu ma'lumotlar <strong>/resume</strong> sahifasida jonli ko'rinadi — u yerdan
-                    "Chop etish" orqali PDF sifatida saqlash mumkin.
-                  </p>
+                  <p className="admin-resume-hint">{t.resumeHint}</p>
                   <input
-                    placeholder="Ism familiya"
+                    placeholder={t.namePlaceholder}
                     value={resume[editLang].name}
                     onChange={(e) => updateResumeField('name', e.target.value)}
                   />
                   <input
-                    placeholder="Lavozim (masalan: Frontend Developer)"
+                    placeholder={t.rolePlaceholder}
                     value={resume[editLang].role}
                     onChange={(e) => updateResumeField('role', e.target.value)}
                   />
                   <textarea
-                    placeholder="Men haqimda"
+                    placeholder={t.aboutPlaceholder}
                     rows="3"
                     value={resume[editLang].about}
                     onChange={(e) => updateResumeField('about', e.target.value)}
                   />
                   <input
-                    placeholder="Ko'nikmalar (vergul bilan ajrating)"
+                    placeholder={t.skillsPlaceholder}
                     value={resume[editLang].skills.join(', ')}
                     onChange={(e) => updateResumeSkills(e.target.value)}
                   />
 
                   <div className="admin-resume-contact">
-                    <span className="admin-resume-contact-label">Kontakt (til bo'yicha bo'linmaydi)</span>
+                    <span className="admin-resume-contact-label">{t.contactLabel}</span>
                     <input
-                      placeholder="Email"
+                      placeholder={t.emailPlaceholder}
                       value={resume.contact.email}
                       onChange={(e) => updateResumeContact('email', e.target.value)}
                     />
                     <input
-                      placeholder="Telegram"
+                      placeholder={t.telegramPlaceholder}
                       value={resume.contact.telegram}
                       onChange={(e) => updateResumeContact('telegram', e.target.value)}
                     />
                     <input
-                      placeholder="Veb-sayt"
+                      placeholder={t.websitePlaceholder}
                       value={resume.contact.website}
                       onChange={(e) => updateResumeContact('website', e.target.value)}
                     />
                   </div>
 
                   <button className="btn btn-primary" onClick={() => saveSection('resume')}>
-                    Saqlash
+                    {t.saveBtn}
                   </button>
                 </div>
 
                 <div className="admin-item admin-resume-card">
                   <div className="admin-item-head">
-                    <span>PDF fayl yuklash</span>
+                    <span>{t.pdfCardTitle}</span>
                   </div>
-                  <p className="admin-resume-hint">
-                    Xohlasangiz, tayyor PDF faylni to'g'ridan-to'g'ri yuklashingiz ham mumkin
-                    (eskisi almashtiriladi):
-                  </p>
-                  <input type="file" accept="application/pdf" onChange={uploadResume} />
+                  <p className="admin-resume-hint">{t.pdfHint}</p>
+                  <label className="upload-btn">
+                    {t.chooseFileBtn}
+                    <input type="file" accept="application/pdf" hidden onChange={uploadResume} />
+                  </label>
                 </div>
               </div>
             )}

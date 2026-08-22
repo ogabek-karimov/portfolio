@@ -91,9 +91,13 @@ section {
   gap: 8px;
   padding: 12px 24px;
   border-radius: 8px;
+  font: inherit;
   font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  appearance: none;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
