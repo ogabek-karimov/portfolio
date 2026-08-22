@@ -15,6 +15,27 @@ const DEFAULT_CONTENT = {
     uz: translations.uz.certificates.items.map((c) => ({ ...c, imageId: '' })),
     ru: translations.ru.certificates.items.map((c) => ({ ...c, imageId: '' })),
   },
+  resume: {
+    contact: {
+      email: 'bek8896ok@gmail.com',
+      telegram: 't.me/bek_xacker',
+      website: 'ogabek-karimov.github.io/portfolio',
+    },
+    uz: {
+      name: "Karimov Og'abek",
+      role: 'Frontend Developer',
+      about:
+        "Frontend dasturchiman, foydalanuvchi uchun qulay va chiroyli interfeyslar yarataman. HTML, CSS va JavaScript asosida boshlab, hozirda React kutubxonasi bilan ishlayman va Node.js yordamida loyihalarni yig'ish (build) va server tomonini ham o'rganib bormoqdaman.",
+      skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Node.js', 'Git / GitHub'],
+    },
+    ru: {
+      name: 'Огабек Каримов',
+      role: 'Frontend-разработчик',
+      about:
+        'Я frontend-разработчик, создаю удобные и красивые интерфейсы для пользователей. Начав с HTML, CSS и JavaScript, сейчас работаю с библиотекой React, а также изучаю сборку проектов и серверную часть с помощью Node.js.',
+      skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Node.js', 'Git / GitHub'],
+    },
+  },
 }
 
 function AdminPage() {
@@ -31,6 +52,7 @@ function AdminPage() {
   const [tab, setTab] = useState('experience')
   const [experience, setExperience] = useState(DEFAULT_CONTENT.experience)
   const [certificates, setCertificates] = useState(DEFAULT_CONTENT.certificates)
+  const [resume, setResume] = useState(DEFAULT_CONTENT.resume)
   const [loaded, setLoaded] = useState(false)
   const [saveMsg, setSaveMsg] = useState('')
   const [highlightIndex, setHighlightIndex] = useState(null)
@@ -56,6 +78,7 @@ function AdminPage() {
             ? data.certificates
             : DEFAULT_CONTENT.certificates,
         )
+        setResume(data.resume && data.resume.contact ? data.resume : DEFAULT_CONTENT.resume)
         setLoaded(true)
       })
   }, [isAdmin])
@@ -131,7 +154,7 @@ function AdminPage() {
 
   async function saveSection(section) {
     setSaveMsg('Saqlanmoqda...')
-    const data = section === 'experience' ? experience : certificates
+    const data = section === 'experience' ? experience : section === 'certificates' ? certificates : resume
     const token = localStorage.getItem('admin-token')
     try {
       const res = await fetch(`${API_URL}/content`, {
@@ -146,6 +169,22 @@ function AdminPage() {
       setSaveMsg('Xato: ' + err.message)
     }
     setTimeout(() => setSaveMsg(''), 3000)
+  }
+
+  function updateResumeField(field, value) {
+    setResume((prev) => ({ ...prev, [editLang]: { ...prev[editLang], [field]: value } }))
+  }
+
+  function updateResumeSkills(value) {
+    const skills = value
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+    setResume((prev) => ({ ...prev, [editLang]: { ...prev[editLang], skills } }))
+  }
+
+  function updateResumeContact(field, value) {
+    setResume((prev) => ({ ...prev, contact: { ...prev.contact, [field]: value } }))
   }
 
   async function uploadCertImage(index, file) {
@@ -388,9 +427,71 @@ function AdminPage() {
             )}
 
             {tab === 'resume' && (
-              <div className="admin-resume">
-                <p>Yangi PDF rezyume faylini yuklang (eskisi almashtiriladi):</p>
-                <input type="file" accept="application/pdf" onChange={uploadResume} />
+              <div className="admin-resume-tabs">
+                <div className="admin-item admin-resume-card">
+                  <div className="admin-item-head">
+                    <span>Rezyume ma'lumotlari ({editLang.toUpperCase()})</span>
+                  </div>
+                  <p className="admin-resume-hint">
+                    Bu ma'lumotlar <strong>/resume</strong> sahifasida jonli ko'rinadi — u yerdan
+                    "Chop etish" orqali PDF sifatida saqlash mumkin.
+                  </p>
+                  <input
+                    placeholder="Ism familiya"
+                    value={resume[editLang].name}
+                    onChange={(e) => updateResumeField('name', e.target.value)}
+                  />
+                  <input
+                    placeholder="Lavozim (masalan: Frontend Developer)"
+                    value={resume[editLang].role}
+                    onChange={(e) => updateResumeField('role', e.target.value)}
+                  />
+                  <textarea
+                    placeholder="Men haqimda"
+                    rows="3"
+                    value={resume[editLang].about}
+                    onChange={(e) => updateResumeField('about', e.target.value)}
+                  />
+                  <input
+                    placeholder="Ko'nikmalar (vergul bilan ajrating)"
+                    value={resume[editLang].skills.join(', ')}
+                    onChange={(e) => updateResumeSkills(e.target.value)}
+                  />
+
+                  <div className="admin-resume-contact">
+                    <span className="admin-resume-contact-label">Kontakt (til bo'yicha bo'linmaydi)</span>
+                    <input
+                      placeholder="Email"
+                      value={resume.contact.email}
+                      onChange={(e) => updateResumeContact('email', e.target.value)}
+                    />
+                    <input
+                      placeholder="Telegram"
+                      value={resume.contact.telegram}
+                      onChange={(e) => updateResumeContact('telegram', e.target.value)}
+                    />
+                    <input
+                      placeholder="Veb-sayt"
+                      value={resume.contact.website}
+                      onChange={(e) => updateResumeContact('website', e.target.value)}
+                    />
+                  </div>
+
+                  <button className="btn btn-primary" onClick={() => saveSection('resume')}>
+                    Saqlash
+                  </button>
+                </div>
+
+                <div className="admin-item admin-resume-card">
+                  <div className="admin-item-head">
+                    <span>PDF fayl yuklash</span>
+                  </div>
+                  <p className="admin-resume-hint">
+                    Xohlasangiz, tayyor PDF faylni to'g'ridan-to'g'ri yuklashingiz ham mumkin
+                    (eskisi almashtiriladi):
+                  </p>
+                  <input type="file" accept="application/pdf" onChange={uploadResume} />
+                </div>
               </div>
             )}
 

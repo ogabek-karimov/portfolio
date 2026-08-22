@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import './Hero.css'
 
@@ -21,12 +22,9 @@ function Hero() {
           <a href="#contact" className="btn btn-outline">
             {dict.hero.ctaContact}
           </a>
-          <a
-            href="https://portfolio-contact-relay.bek8896ok.workers.dev/resume.pdf"
-            className="btn btn-outline"
-          >
+          <Link to="/resume" className="btn btn-outline">
             {dict.resume.downloadBtn}
-          </a>
+          </Link>
         </div>
       </div>
     </section>

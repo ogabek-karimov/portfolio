@@ -186,19 +186,35 @@ async function handleVerifyOtp(request, env, headers) {
 }
 
 async function handleGetContent(env, headers) {
-  const [experience, certificates] = await Promise.all([
+  const [experience, certificates, resume] = await Promise.all([
     env.SITE_CONTENT.get('content:experience'),
     env.SITE_CONTENT.get('content:certificates'),
+    env.SITE_CONTENT.get('content:resume'),
   ])
 
   return json(
     {
       experience: experience ? JSON.parse(experience) : null,
       certificates: certificates ? JSON.parse(certificates) : null,
+      resume: resume ? JSON.parse(resume) : null,
     },
     200,
     headers,
   )
+}
+
+function isValidResumeData(data) {
+  if (!data || typeof data !== 'object') return false
+  if (!data.contact || typeof data.contact !== 'object') return false
+  for (const l of ['uz', 'ru']) {
+    const p = data[l]
+    if (!p || typeof p !== 'object') return false
+    if (typeof p.name !== 'string' || typeof p.role !== 'string' || typeof p.about !== 'string') {
+      return false
+    }
+    if (!Array.isArray(p.skills)) return false
+  }
+  return true
 }
 
 async function handlePutContent(request, env, headers) {
@@ -213,10 +229,15 @@ async function handlePutContent(request, env, headers) {
   }
 
   const { section, data } = body
-  if (section !== 'experience' && section !== 'certificates') {
+  if (!['experience', 'certificates', 'resume'].includes(section)) {
     return json({ error: "Noto'g'ri bo'lim" }, 400, headers)
   }
-  if (!data || typeof data !== 'object' || !Array.isArray(data.uz) || !Array.isArray(data.ru)) {
+
+  if (section === 'resume') {
+    if (!isValidResumeData(data)) {
+      return json({ error: "Noto'g'ri ma'lumot formati" }, 400, headers)
+    }
+  } else if (!data || typeof data !== 'object' || !Array.isArray(data.uz) || !Array.isArray(data.ru)) {
     return json({ error: "Noto'g'ri ma'lumot formati" }, 400, headers)
   }
 

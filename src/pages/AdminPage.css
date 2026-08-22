@@ -246,3 +246,44 @@
   margin-bottom: 12px;
   color: var(--text);
 }
+
+.admin-resume-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 640px;
+}
+
+.admin-resume-card {
+  gap: 10px;
+}
+
+.admin-resume-hint {
+  font-size: 12px;
+  color: var(--text);
+  margin: 0 0 4px;
+}
+
+.admin-resume-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.admin-resume-contact-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text);
+}
+
+.admin-resume-card .btn {
+  align-self: flex-start;
+  border: none;
+  font: inherit;
+  margin-top: 6px;
+}

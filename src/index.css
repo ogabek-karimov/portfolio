@@ -165,3 +165,10 @@ section {
   color: var(--text);
   margin-bottom: 48px;
 }
+
+@media print {
+  .navbar,
+  .footer {
+    display: none !important;
+  }
+}

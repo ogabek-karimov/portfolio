@@ -4,6 +4,7 @@ import Footer from './components/Footer'
 import HomePage from './pages/HomePage'
 import ExperiencePage from './pages/ExperiencePage'
 import CertificatesPage from './pages/CertificatesPage'
+import ResumePage from './pages/ResumePage'
 import AdminPage from './pages/AdminPage'
 import NotFoundPage from './pages/NotFoundPage'
 import { LanguageProvider } from './i18n/LanguageContext'
@@ -22,6 +23,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/experience" element={<ExperiencePage />} />
                 <Route path="/certificates" element={<CertificatesPage />} />
+                <Route path="/resume" element={<ResumePage />} />
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Routes>
