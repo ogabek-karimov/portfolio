@@ -71,7 +71,7 @@ const DEFAULT_CONTENT = {
 function AdminPage() {
   const { lang, dict } = useLanguage()
   const t = dict.admin
-  const { isAdmin, login } = useAdminAuth()
+  const { isAdmin, login, expireSession, expiredReason } = useAdminAuth()
 
   const [phone, setPhone] = useState('')
   const [code, setCode] = useState('')
@@ -94,6 +94,13 @@ function AdminPage() {
   useEffect(() => {
     setHighlightIndex(null)
   }, [tab, editLang])
+
+  useEffect(() => {
+    if (expiredReason) {
+      setStep('phone')
+      setCode('')
+    }
+  }, [expiredReason])
 
   useEffect(() => {
     if (!isAdmin) return
@@ -229,6 +236,10 @@ function AdminPage() {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ section, data }),
       })
+      if (res.status === 401) {
+        expireSession('token')
+        return
+      }
       const result = await res.json()
       if (!res.ok) throw new Error(result.error || 'Error')
       setSavedSnapshots((prev) => ({ ...prev, [section]: JSON.stringify(data) }))
@@ -278,6 +289,10 @@ function AdminPage() {
         headers: { 'Content-Type': file.type, Authorization: `Bearer ${token}` },
         body: file,
       })
+      if (res.status === 401) {
+        expireSession('token')
+        return
+      }
       const result = await res.json()
       if (!res.ok) throw new Error(result.error || 'Error')
       updateItem('certificates', index, 'imageId', result.id)
@@ -300,6 +315,10 @@ function AdminPage() {
         headers: { Authorization: `Bearer ${token}` },
         body: file,
       })
+      if (res.status === 401) {
+        expireSession('token')
+        return
+      }
       const result = await res.json()
       if (!res.ok) throw new Error(result.error || 'Error')
       setSaveMsg(t.resumeUploadedMsg)
@@ -314,6 +333,12 @@ function AdminPage() {
       <section className="admin-login">
         <div className="admin-login-card">
           <h1>{t.loginTitle}</h1>
+
+          {expiredReason && (
+            <p className="admin-session-expired-msg">
+              {expiredReason === 'inactivity' ? t.sessionExpiredInactivity : t.sessionExpiredGeneric}
+            </p>
+          )}
 
           {step === 'phone' && (
             <form onSubmit={requestOtp}>

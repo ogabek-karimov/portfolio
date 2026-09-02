@@ -178,6 +178,9 @@ const translations = {
       moveDownLabel: 'Pastga surish',
       deleteConfirmMsg: "Bu yozuvni butunlay o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi.",
       unsavedHint: "Saqlanmagan o'zgarishlar bor",
+      sessionExpiredInactivity:
+        "10 daqiqa davomida hech qanday harakat bo'lmagani uchun xavfsizlik maqsadida avtomatik chiqildi. Qaytadan kiring.",
+      sessionExpiredGeneric: 'Sessiya muddati tugadi, qaytadan kiring.',
     },
   },
   ru: {
@@ -358,6 +361,9 @@ const translations = {
       moveDownLabel: 'Переместить вниз',
       deleteConfirmMsg: 'Вы точно хотите удалить эту запись? Это действие нельзя отменить.',
       unsavedHint: 'Есть несохранённые изменения',
+      sessionExpiredInactivity:
+        'Вы были неактивны 10 минут — для безопасности выполнен автоматический выход. Войдите снова.',
+      sessionExpiredGeneric: 'Срок сессии истёк, войдите снова.',
     },
   },
 }

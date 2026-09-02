@@ -57,6 +57,17 @@
   color: var(--accent);
 }
 
+.admin-session-expired-msg {
+  margin: 0 0 20px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #b45309;
+  background: color-mix(in srgb, #f59e0b 12%, transparent);
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-align: left;
+}
+
 .admin-dashboard {
   padding: 40px 0 100px;
 }
