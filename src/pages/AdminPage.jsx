@@ -26,6 +26,15 @@ function EyeIcon({ hidden }) {
   )
 }
 
+function ChevronIcon({ direction }) {
+  const d = direction === 'up' ? 'M18 15l-6-6-6 6' : 'M6 9l6 6 6-6'
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d={d} />
+    </svg>
+  )
+}
+
 const DEFAULT_CONTENT = {
   experience: {
     uz: translations.uz.experience.items.map((i) => ({ ...i, hidden: false })),
@@ -80,6 +89,7 @@ function AdminPage() {
   const [highlightIndex, setHighlightIndex] = useState(null)
   const itemRefs = useRef({})
   const [uploadingIndex, setUploadingIndex] = useState(null)
+  const [savedSnapshots, setSavedSnapshots] = useState({ experience: '', certificates: '', resume: '' })
 
   useEffect(() => {
     setHighlightIndex(null)
@@ -90,24 +100,44 @@ function AdminPage() {
     fetch(`${API_URL}/content`)
       .then((r) => r.json())
       .then((data) => {
-        setExperience(
+        const exp =
           data.experience && (data.experience.uz.length || data.experience.ru.length)
             ? data.experience
-            : DEFAULT_CONTENT.experience,
-        )
-        setCertificates(
+            : DEFAULT_CONTENT.experience
+        const certs =
           data.certificates && (data.certificates.uz.length || data.certificates.ru.length)
             ? data.certificates
-            : DEFAULT_CONTENT.certificates,
-        )
-        setResume(
+            : DEFAULT_CONTENT.certificates
+        const res =
           data.resume && data.resume.contact
             ? { ...data.resume, hidden: Boolean(data.resume.hidden) }
-            : DEFAULT_CONTENT.resume,
-        )
+            : DEFAULT_CONTENT.resume
+        setExperience(exp)
+        setCertificates(certs)
+        setResume(res)
+        setSavedSnapshots({
+          experience: JSON.stringify(exp),
+          certificates: JSON.stringify(certs),
+          resume: JSON.stringify(res),
+        })
         setLoaded(true)
       })
   }, [isAdmin])
+
+  const experienceDirty = JSON.stringify(experience) !== savedSnapshots.experience
+  const certificatesDirty = JSON.stringify(certificates) !== savedSnapshots.certificates
+  const resumeDirty = JSON.stringify(resume) !== savedSnapshots.resume
+  const anyDirty = experienceDirty || certificatesDirty || resumeDirty
+
+  useEffect(() => {
+    if (!anyDirty) return
+    const handler = (e) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [anyDirty])
 
   async function requestOtp(e) {
     e.preventDefault()
@@ -173,8 +203,20 @@ function AdminPage() {
   }
 
   function removeItem(section, index) {
+    if (!window.confirm(t.deleteConfirmMsg)) return
     const setter = section === 'experience' ? setExperience : setCertificates
     setter((prev) => ({ ...prev, [editLang]: prev[editLang].filter((_, i) => i !== index) }))
+  }
+
+  function moveItem(section, index, direction) {
+    const setter = section === 'experience' ? setExperience : setCertificates
+    setter((prev) => {
+      const list = [...prev[editLang]]
+      const target = index + direction
+      if (target < 0 || target >= list.length) return prev
+      ;[list[index], list[target]] = [list[target], list[index]]
+      return { ...prev, [editLang]: list }
+    })
   }
 
   async function saveSection(section) {
@@ -189,6 +231,7 @@ function AdminPage() {
       })
       const result = await res.json()
       if (!res.ok) throw new Error(result.error || 'Error')
+      setSavedSnapshots((prev) => ({ ...prev, [section]: JSON.stringify(data) }))
       setSaveMsg(t.savedMsg)
     } catch (err) {
       setSaveMsg(`${t.errorPrefix} ${err.message}`)
@@ -325,12 +368,15 @@ function AdminPage() {
           <div className="admin-tabs">
             <button className={tab === 'experience' ? 'active' : ''} onClick={() => setTab('experience')}>
               {t.tabExperience}
+              {experienceDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
             </button>
             <button className={tab === 'certificates' ? 'active' : ''} onClick={() => setTab('certificates')}>
               {t.tabCertificates}
+              {certificatesDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
             </button>
             <button className={tab === 'resume' ? 'active' : ''} onClick={() => setTab('resume')}>
               {t.tabResume}
+              {resumeDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
             </button>
           </div>
 
@@ -346,150 +392,239 @@ function AdminPage() {
         ) : (
           <>
             {tab === 'experience' && (
-              <div className="admin-list">
-                {experience[editLang].map((item, i) => (
-                  <div
-                    className={`admin-item ${highlightIndex === i ? 'highlight' : ''} ${item.hidden ? 'is-hidden' : ''}`}
-                    key={i}
-                    ref={(el) => (itemRefs.current[i] = el)}
-                  >
-                    <div className="admin-item-head">
-                      <span>
-                        {t.entryLabel} №{i + 1}
-                        {item.hidden && <span className="hidden-badge">{t.hiddenBadge}</span>}
-                      </span>
-                      <div className="admin-item-actions">
-                        <button
-                          type="button"
-                          className="icon-btn"
-                          title={item.hidden ? t.showLabel : t.hideLabel}
-                          onClick={() => toggleItemHidden('experience', i)}
-                        >
-                          <EyeIcon hidden={item.hidden} />
-                        </button>
-                        <button
-                          type="button"
-                          className="icon-btn"
-                          title={t.deleteLabel}
-                          onClick={() => removeItem('experience', i)}
-                        >
-                          🗑️
-                        </button>
+              <div className="admin-layout">
+                <div className="admin-list">
+                  {experience[editLang].map((item, i) => (
+                    <div
+                      className={`admin-item ${highlightIndex === i ? 'highlight' : ''} ${item.hidden ? 'is-hidden' : ''}`}
+                      key={i}
+                      ref={(el) => (itemRefs.current[i] = el)}
+                    >
+                      <div className="admin-item-head">
+                        <span>
+                          {t.entryLabel} №{i + 1}
+                          {item.hidden && <span className="hidden-badge">{t.hiddenBadge}</span>}
+                        </span>
+                        <div className="admin-item-actions">
+                          <button
+                            type="button"
+                            className="icon-btn"
+                            title={t.moveUpLabel}
+                            disabled={i === 0}
+                            onClick={() => moveItem('experience', i, -1)}
+                          >
+                            <ChevronIcon direction="up" />
+                          </button>
+                          <button
+                            type="button"
+                            className="icon-btn"
+                            title={t.moveDownLabel}
+                            disabled={i === experience[editLang].length - 1}
+                            onClick={() => moveItem('experience', i, 1)}
+                          >
+                            <ChevronIcon direction="down" />
+                          </button>
+                          <button
+                            type="button"
+                            className="icon-btn"
+                            title={item.hidden ? t.showLabel : t.hideLabel}
+                            onClick={() => toggleItemHidden('experience', i)}
+                          >
+                            <EyeIcon hidden={item.hidden} />
+                          </button>
+                          <button
+                            type="button"
+                            className="icon-btn"
+                            title={t.deleteLabel}
+                            onClick={() => removeItem('experience', i)}
+                          >
+                            🗑️
+                          </button>
+                        </div>
                       </div>
+                      <input
+                        placeholder={t.datePlaceholder}
+                        value={item.date}
+                        onChange={(e) => updateItem('experience', i, 'date', e.target.value)}
+                      />
+                      <input
+                        placeholder={t.titlePlaceholder}
+                        value={item.title}
+                        onChange={(e) => updateItem('experience', i, 'title', e.target.value)}
+                      />
+                      <input
+                        placeholder={t.placePlaceholder}
+                        value={item.place}
+                        onChange={(e) => updateItem('experience', i, 'place', e.target.value)}
+                      />
+                      <textarea
+                        placeholder={t.descPlaceholder}
+                        rows="2"
+                        value={item.desc}
+                        onChange={(e) => updateItem('experience', i, 'desc', e.target.value)}
+                      />
                     </div>
-                    <input
-                      placeholder={t.datePlaceholder}
-                      value={item.date}
-                      onChange={(e) => updateItem('experience', i, 'date', e.target.value)}
-                    />
-                    <input
-                      placeholder={t.titlePlaceholder}
-                      value={item.title}
-                      onChange={(e) => updateItem('experience', i, 'title', e.target.value)}
-                    />
-                    <input
-                      placeholder={t.placePlaceholder}
-                      value={item.place}
-                      onChange={(e) => updateItem('experience', i, 'place', e.target.value)}
-                    />
-                    <textarea
-                      placeholder={t.descPlaceholder}
-                      rows="2"
-                      value={item.desc}
-                      onChange={(e) => updateItem('experience', i, 'desc', e.target.value)}
-                    />
-                  </div>
-                ))}
-                <button className="btn btn-outline" onClick={() => addItem('experience')}>
-                  {t.addExperienceBtn}
-                </button>
-                <button className="btn btn-primary" onClick={() => saveSection('experience')}>
-                  {t.saveBtn}
-                </button>
+                  ))}
+                  <button className="btn btn-outline" onClick={() => addItem('experience')}>
+                    {t.addExperienceBtn}
+                  </button>
+                  <button className="btn btn-primary" onClick={() => saveSection('experience')}>
+                    {t.saveBtn}
+                    {experienceDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
+                  </button>
+                </div>
+
+                <aside className="admin-preview">
+                  <h3>{t.previewTitle}</h3>
+                  {experience[editLang].filter((item) => !item.hidden).length === 0 ? (
+                    <p className="admin-preview-empty">{t.previewEmpty}</p>
+                  ) : (
+                    experience[editLang]
+                      .filter((item) => !item.hidden)
+                      .map((item, i) => (
+                        <div className="preview-timeline-item" key={i}>
+                          <div className="preview-timeline-top">
+                            <strong>{item.title || '—'}</strong>
+                            <span>{item.date}</span>
+                          </div>
+                          <div className="preview-timeline-place">{item.place}</div>
+                          <p>{item.desc}</p>
+                        </div>
+                      ))
+                  )}
+                </aside>
               </div>
             )}
 
             {tab === 'certificates' && (
-              <div className="admin-list">
-                {certificates[editLang].map((item, i) => (
-                  <div
-                    className={`admin-item ${highlightIndex === i ? 'highlight' : ''} ${item.hidden ? 'is-hidden' : ''}`}
-                    key={i}
-                    ref={(el) => (itemRefs.current[i] = el)}
-                  >
-                    <div className="admin-item-head">
-                      <span>
-                        {t.certLabel} №{i + 1}
-                        {item.hidden && <span className="hidden-badge">{t.hiddenBadge}</span>}
-                      </span>
-                      <div className="admin-item-actions">
-                        <button
-                          type="button"
-                          className="icon-btn"
-                          title={item.hidden ? t.showLabel : t.hideLabel}
-                          onClick={() => toggleItemHidden('certificates', i)}
-                        >
-                          <EyeIcon hidden={item.hidden} />
-                        </button>
-                        <button
-                          type="button"
-                          className="icon-btn"
-                          title={t.deleteLabel}
-                          onClick={() => removeItem('certificates', i)}
-                        >
-                          🗑️
-                        </button>
+              <div className="admin-layout">
+                <div className="admin-list">
+                  {certificates[editLang].map((item, i) => (
+                    <div
+                      className={`admin-item ${highlightIndex === i ? 'highlight' : ''} ${item.hidden ? 'is-hidden' : ''}`}
+                      key={i}
+                      ref={(el) => (itemRefs.current[i] = el)}
+                    >
+                      <div className="admin-item-head">
+                        <span>
+                          {t.certLabel} №{i + 1}
+                          {item.hidden && <span className="hidden-badge">{t.hiddenBadge}</span>}
+                        </span>
+                        <div className="admin-item-actions">
+                          <button
+                            type="button"
+                            className="icon-btn"
+                            title={t.moveUpLabel}
+                            disabled={i === 0}
+                            onClick={() => moveItem('certificates', i, -1)}
+                          >
+                            <ChevronIcon direction="up" />
+                          </button>
+                          <button
+                            type="button"
+                            className="icon-btn"
+                            title={t.moveDownLabel}
+                            disabled={i === certificates[editLang].length - 1}
+                            onClick={() => moveItem('certificates', i, 1)}
+                          >
+                            <ChevronIcon direction="down" />
+                          </button>
+                          <button
+                            type="button"
+                            className="icon-btn"
+                            title={item.hidden ? t.showLabel : t.hideLabel}
+                            onClick={() => toggleItemHidden('certificates', i)}
+                          >
+                            <EyeIcon hidden={item.hidden} />
+                          </button>
+                          <button
+                            type="button"
+                            className="icon-btn"
+                            title={t.deleteLabel}
+                            onClick={() => removeItem('certificates', i)}
+                          >
+                            🗑️
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="cert-image-row">
-                      {item.imageId ? (
-                        <img
-                          src={`${API_URL}/cert-image/${item.imageId}`}
-                          alt=""
-                          className="cert-image-preview"
-                        />
-                      ) : (
-                        <div className="cert-image-placeholder">🏅</div>
-                      )}
-                      <label className="upload-btn">
-                        {uploadingIndex === i ? t.uploadingLabel : t.uploadImageBtn}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          hidden
-                          onChange={(e) => uploadCertImage(i, e.target.files[0])}
-                        />
-                      </label>
-                    </div>
+                      <div className="cert-image-row">
+                        {item.imageId ? (
+                          <img
+                            src={`${API_URL}/cert-image/${item.imageId}`}
+                            alt=""
+                            className="cert-image-preview"
+                          />
+                        ) : (
+                          <div className="cert-image-placeholder">🏅</div>
+                        )}
+                        <label className="upload-btn">
+                          {uploadingIndex === i ? t.uploadingLabel : t.uploadImageBtn}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            hidden
+                            onChange={(e) => uploadCertImage(i, e.target.files[0])}
+                          />
+                        </label>
+                      </div>
 
-                    <input
-                      placeholder={t.certTitlePlaceholder}
-                      value={item.title}
-                      onChange={(e) => updateItem('certificates', i, 'title', e.target.value)}
-                    />
-                    <input
-                      placeholder={t.certIssuerPlaceholder}
-                      value={item.issuer}
-                      onChange={(e) => updateItem('certificates', i, 'issuer', e.target.value)}
-                    />
-                    <input
-                      placeholder={t.certDatePlaceholder}
-                      value={item.date}
-                      onChange={(e) => updateItem('certificates', i, 'date', e.target.value)}
-                    />
-                  </div>
-                ))}
-                <button className="btn btn-outline" onClick={() => addItem('certificates')}>
-                  {t.addCertBtn}
-                </button>
-                <button className="btn btn-primary" onClick={() => saveSection('certificates')}>
-                  {t.saveBtn}
-                </button>
+                      <input
+                        placeholder={t.certTitlePlaceholder}
+                        value={item.title}
+                        onChange={(e) => updateItem('certificates', i, 'title', e.target.value)}
+                      />
+                      <input
+                        placeholder={t.certIssuerPlaceholder}
+                        value={item.issuer}
+                        onChange={(e) => updateItem('certificates', i, 'issuer', e.target.value)}
+                      />
+                      <input
+                        placeholder={t.certDatePlaceholder}
+                        value={item.date}
+                        onChange={(e) => updateItem('certificates', i, 'date', e.target.value)}
+                      />
+                    </div>
+                  ))}
+                  <button className="btn btn-outline" onClick={() => addItem('certificates')}>
+                    {t.addCertBtn}
+                  </button>
+                  <button className="btn btn-primary" onClick={() => saveSection('certificates')}>
+                    {t.saveBtn}
+                    {certificatesDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
+                  </button>
+                </div>
+
+                <aside className="admin-preview">
+                  <h3>{t.previewTitle}</h3>
+                  {certificates[editLang].filter((item) => !item.hidden).length === 0 ? (
+                    <p className="admin-preview-empty">{t.previewEmpty}</p>
+                  ) : (
+                    <div className="preview-cert-grid">
+                      {certificates[editLang]
+                        .filter((item) => !item.hidden)
+                        .map((item, i) => (
+                          <div className="preview-cert-item" key={i}>
+                            {item.imageId ? (
+                              <img src={`${API_URL}/cert-image/${item.imageId}`} alt="" />
+                            ) : (
+                              <div className="preview-cert-placeholder">🏅</div>
+                            )}
+                            <div className="preview-cert-body">
+                              <strong>{item.title || '—'}</strong>
+                              <span>{item.issuer}</span>
+                              <span>{item.date}</span>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </aside>
               </div>
             )}
 
             {tab === 'resume' && (
+              <div className="admin-layout">
               <div className="admin-resume-tabs">
                 <div className={`admin-item admin-resume-card ${resume.hidden ? 'is-hidden' : ''}`}>
                   <div className="admin-item-head">
@@ -550,6 +685,7 @@ function AdminPage() {
 
                   <button className="btn btn-primary" onClick={() => saveSection('resume')}>
                     {t.saveBtn}
+                    {resumeDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
                   </button>
                 </div>
 
@@ -564,6 +700,27 @@ function AdminPage() {
                     <input type="file" accept="application/pdf" hidden onChange={uploadResume} />
                   </label>
                 </div>
+              </div>
+
+              <aside className="admin-preview">
+                <h3>{t.previewTitle}</h3>
+                {resume.hidden ? (
+                  <p className="admin-preview-empty">{t.previewResumeHidden}</p>
+                ) : (
+                  <div className="admin-preview-resume">
+                    <div className="admin-preview-resume-head">
+                      <strong>{resume[editLang].name || '—'}</strong>
+                      <span>{resume[editLang].role}</span>
+                    </div>
+                    <p>{resume[editLang].about}</p>
+                    <div className="admin-preview-resume-skills">
+                      {resume[editLang].skills.map((s) => (
+                        <span key={s}>{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </aside>
               </div>
             )}
 

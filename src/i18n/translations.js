@@ -169,6 +169,13 @@ const translations = {
       hiddenBadge: 'Yashiringan',
       pdfUploadNote:
         "Diqqat: bu faqat PDF faylni almashtiradi — /resume sahifasidagi (yuqoridagi kartochkada tahrirlagan) ma'lumotlarga hech qanday ta'sir qilmaydi.",
+      previewTitle: "Ko'rinish (foydalanuvchi shu tarzda ko'radi)",
+      previewEmpty: "Hozircha ko'rinadigan yozuv yo'q",
+      previewResumeHidden: 'Rezyume hozircha mavjud emas.',
+      moveUpLabel: 'Yuqoriga surish',
+      moveDownLabel: 'Pastga surish',
+      deleteConfirmMsg: "Bu yozuvni butunlay o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi.",
+      unsavedHint: "Saqlanmagan o'zgarishlar bor",
     },
   },
   ru: {
@@ -340,6 +347,13 @@ const translations = {
       hiddenBadge: 'Скрыто',
       pdfUploadNote:
         'Внимание: это заменяет только PDF-файл — на данные страницы /resume (которые вы редактируете выше) это никак не влияет.',
+      previewTitle: 'Предпросмотр (так видят посетители)',
+      previewEmpty: 'Пока нет видимых записей',
+      previewResumeHidden: 'Резюме пока недоступно.',
+      moveUpLabel: 'Переместить вверх',
+      moveDownLabel: 'Переместить вниз',
+      deleteConfirmMsg: 'Вы точно хотите удалить эту запись? Это действие нельзя отменить.',
+      unsavedHint: 'Есть несохранённые изменения',
     },
   },
 }
