@@ -405,49 +405,51 @@ function AdminPage() {
                           {t.entryLabel} №{i + 1}
                           {item.hidden && <span className="hidden-badge">{t.hiddenBadge}</span>}
                         </span>
-                        <button
-                          type="button"
-                          className="mini-save-btn"
-                          onClick={() => saveSection('experience')}
-                        >
-                          {t.saveBtn}
-                          {experienceDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
-                        </button>
-                        <div className="admin-item-actions">
+                        <div className="admin-item-head-actions">
                           <button
                             type="button"
-                            className="icon-btn"
-                            title={t.moveUpLabel}
-                            disabled={i === 0}
-                            onClick={() => moveItem('experience', i, -1)}
+                            className="mini-save-btn"
+                            onClick={() => saveSection('experience')}
                           >
-                            <ChevronIcon direction="up" />
+                            {t.saveBtn}
+                            {experienceDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
                           </button>
-                          <button
-                            type="button"
-                            className="icon-btn"
-                            title={t.moveDownLabel}
-                            disabled={i === experience[editLang].length - 1}
-                            onClick={() => moveItem('experience', i, 1)}
-                          >
-                            <ChevronIcon direction="down" />
-                          </button>
-                          <button
-                            type="button"
-                            className="icon-btn"
-                            title={item.hidden ? t.showLabel : t.hideLabel}
-                            onClick={() => toggleItemHidden('experience', i)}
-                          >
-                            <EyeIcon hidden={item.hidden} />
-                          </button>
-                          <button
-                            type="button"
-                            className="icon-btn"
-                            title={t.deleteLabel}
-                            onClick={() => removeItem('experience', i)}
-                          >
-                            🗑️
-                          </button>
+                          <div className="admin-item-actions">
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              title={t.moveUpLabel}
+                              disabled={i === 0}
+                              onClick={() => moveItem('experience', i, -1)}
+                            >
+                              <ChevronIcon direction="up" />
+                            </button>
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              title={t.moveDownLabel}
+                              disabled={i === experience[editLang].length - 1}
+                              onClick={() => moveItem('experience', i, 1)}
+                            >
+                              <ChevronIcon direction="down" />
+                            </button>
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              title={item.hidden ? t.showLabel : t.hideLabel}
+                              onClick={() => toggleItemHidden('experience', i)}
+                            >
+                              <EyeIcon hidden={item.hidden} />
+                            </button>
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              title={t.deleteLabel}
+                              onClick={() => removeItem('experience', i)}
+                            >
+                              🗑️
+                            </button>
+                          </div>
                         </div>
                       </div>
                       <input
@@ -518,49 +520,51 @@ function AdminPage() {
                           {t.certLabel} №{i + 1}
                           {item.hidden && <span className="hidden-badge">{t.hiddenBadge}</span>}
                         </span>
-                        <button
-                          type="button"
-                          className="mini-save-btn"
-                          onClick={() => saveSection('certificates')}
-                        >
-                          {t.saveBtn}
-                          {certificatesDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
-                        </button>
-                        <div className="admin-item-actions">
+                        <div className="admin-item-head-actions">
                           <button
                             type="button"
-                            className="icon-btn"
-                            title={t.moveUpLabel}
-                            disabled={i === 0}
-                            onClick={() => moveItem('certificates', i, -1)}
+                            className="mini-save-btn"
+                            onClick={() => saveSection('certificates')}
                           >
-                            <ChevronIcon direction="up" />
+                            {t.saveBtn}
+                            {certificatesDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
                           </button>
-                          <button
-                            type="button"
-                            className="icon-btn"
-                            title={t.moveDownLabel}
-                            disabled={i === certificates[editLang].length - 1}
-                            onClick={() => moveItem('certificates', i, 1)}
-                          >
-                            <ChevronIcon direction="down" />
-                          </button>
-                          <button
-                            type="button"
-                            className="icon-btn"
-                            title={item.hidden ? t.showLabel : t.hideLabel}
-                            onClick={() => toggleItemHidden('certificates', i)}
-                          >
-                            <EyeIcon hidden={item.hidden} />
-                          </button>
-                          <button
-                            type="button"
-                            className="icon-btn"
-                            title={t.deleteLabel}
-                            onClick={() => removeItem('certificates', i)}
-                          >
-                            🗑️
-                          </button>
+                          <div className="admin-item-actions">
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              title={t.moveUpLabel}
+                              disabled={i === 0}
+                              onClick={() => moveItem('certificates', i, -1)}
+                            >
+                              <ChevronIcon direction="up" />
+                            </button>
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              title={t.moveDownLabel}
+                              disabled={i === certificates[editLang].length - 1}
+                              onClick={() => moveItem('certificates', i, 1)}
+                            >
+                              <ChevronIcon direction="down" />
+                            </button>
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              title={item.hidden ? t.showLabel : t.hideLabel}
+                              onClick={() => toggleItemHidden('certificates', i)}
+                            >
+                              <EyeIcon hidden={item.hidden} />
+                            </button>
+                            <button
+                              type="button"
+                              className="icon-btn"
+                              title={t.deleteLabel}
+                              onClick={() => removeItem('certificates', i)}
+                            >
+                              🗑️
+                            </button>
+                          </div>
                         </div>
                       </div>
 
