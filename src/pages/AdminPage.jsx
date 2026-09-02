@@ -405,6 +405,14 @@ function AdminPage() {
                           {t.entryLabel} №{i + 1}
                           {item.hidden && <span className="hidden-badge">{t.hiddenBadge}</span>}
                         </span>
+                        <button
+                          type="button"
+                          className="mini-save-btn"
+                          onClick={() => saveSection('experience')}
+                        >
+                          {t.saveBtn}
+                          {experienceDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
+                        </button>
                         <div className="admin-item-actions">
                           <button
                             type="button"
@@ -510,6 +518,14 @@ function AdminPage() {
                           {t.certLabel} №{i + 1}
                           {item.hidden && <span className="hidden-badge">{t.hiddenBadge}</span>}
                         </span>
+                        <button
+                          type="button"
+                          className="mini-save-btn"
+                          onClick={() => saveSection('certificates')}
+                        >
+                          {t.saveBtn}
+                          {certificatesDirty && <span className="unsaved-dot" title={t.unsavedHint} />}
+                        </button>
                         <div className="admin-item-actions">
                           <button
                             type="button"
@@ -707,16 +723,26 @@ function AdminPage() {
                 {resume.hidden ? (
                   <p className="admin-preview-empty">{t.previewResumeHidden}</p>
                 ) : (
-                  <div className="admin-preview-resume">
-                    <div className="admin-preview-resume-head">
-                      <strong>{resume[editLang].name || '—'}</strong>
-                      <span>{resume[editLang].role}</span>
+                  <div className="preview-resume-sheet">
+                    <div className="preview-resume-header">
+                      <h4>{resume[editLang].name || '—'}</h4>
+                      <p className="preview-resume-role">{resume[editLang].role}</p>
+                      <div className="preview-resume-contact">
+                        <span>✉️ {resume.contact.email}</span>
+                        <span>💬 {resume.contact.telegram}</span>
+                      </div>
                     </div>
-                    <p>{resume[editLang].about}</p>
-                    <div className="admin-preview-resume-skills">
-                      {resume[editLang].skills.map((s) => (
-                        <span key={s}>{s}</span>
-                      ))}
+                    <div className="preview-resume-section">
+                      <h5>{t.previewAboutLabel}</h5>
+                      <p>{resume[editLang].about}</p>
+                    </div>
+                    <div className="preview-resume-section">
+                      <h5>{t.previewSkillsLabel}</h5>
+                      <div className="preview-resume-skills">
+                        {resume[editLang].skills.map((s) => (
+                          <span key={s}>{s}</span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 )}
