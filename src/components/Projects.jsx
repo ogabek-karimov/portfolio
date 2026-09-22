@@ -3,6 +3,7 @@ import './Projects.css'
 import todoImg from '../assets/project-todo.png'
 import calculatorImg from '../assets/project-calculator.png'
 import weatherImg from '../assets/project-weather.png'
+import chorvabozorImg from '../assets/project-chorvabozor.png'
 
 const projectMeta = [
   {
@@ -23,6 +24,22 @@ const projectMeta = [
     demo: '/portfolio/projects/weather-app/',
     code: 'https://github.com/ogabek-karimov/portfolio/tree/master/public/projects/weather-app',
   },
+  {
+    tags: ['Cloudflare Workers', 'D1', 'React'],
+    image: chorvabozorImg,
+    demo: 'https://chorvabozor.bek8896ok.workers.dev',
+    code: 'https://github.com/ogabek-karimov/livestock-marketplace',
+  },
+  {
+    tags: ['Cloudflare Workers', 'Telegram Bot API', 'Cron'],
+    icon: '🎥',
+    code: 'https://github.com/ogabek-karimov/zoom-elon-bot',
+  },
+  {
+    tags: ['Python', 'aiogram', 'Telegram Mini App'],
+    icon: '📚',
+    code: 'https://github.com/ogabek-karimov/talim-yordamchisi-bot',
+  },
 ]
 
 function Projects() {
@@ -37,10 +54,16 @@ function Projects() {
 
         <div className="projects-grid">
           {projects.map((project) => (
-            <div className="project-card" key={project.demo}>
-              <a href={project.demo} className="project-thumb-link">
-                <img src={project.image} alt={project.title} className="project-thumb" />
-              </a>
+            <div className="project-card" key={project.code}>
+              {project.image ? (
+                <a href={project.demo} target="_blank" rel="noreferrer" className="project-thumb-link">
+                  <img src={project.image} alt={project.title} className="project-thumb" />
+                </a>
+              ) : (
+                <div className="project-thumb-placeholder">
+                  <span>{project.icon}</span>
+                </div>
+              )}
               <div className="project-body">
                 <h3>{project.title}</h3>
                 <p>{project.desc}</p>
@@ -50,9 +73,11 @@ function Projects() {
                   ))}
                 </div>
                 <div className="project-links">
-                  <a href={project.demo} className="btn btn-outline">
-                    {dict.projects.liveDemo}
-                  </a>
+                  {project.demo && (
+                    <a href={project.demo} target="_blank" rel="noreferrer" className="btn btn-outline">
+                      {dict.projects.liveDemo}
+                    </a>
+                  )}
                   <a href={project.code} target="_blank" rel="noreferrer" className="btn btn-outline">
                     {dict.projects.github}
                   </a>

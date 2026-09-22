@@ -45,6 +45,18 @@ const translations = {
           title: 'Ob-havo',
           desc: "Shahar nomi bo'yicha joriy ob-havo ma'lumotlarini bepul ochiq API orqali real vaqtda ko'rsatadigan ilova.",
         },
+        {
+          title: 'ChorvaBozor',
+          desc: "Fermerlar va xaridorlarni bir joyga jamlagan chorva mollari savdosi platformasi: e'lon joylash, qidirish, turkum/hudud/narx bo'yicha filtrlash va sotuvchi bilan bevosita bog'lanish. Cloudflare Workers, D1 va R2 asosida to'liq bepul infratuzilmada ishlaydi.",
+        },
+        {
+          title: "Zoom e'lon bot",
+          desc: "uzswlu.uz saytidagi Zoom orqali o'tkaziladigan tadbirlar haqidagi e'lonlarni soatlik tekshirib, tadbirdan bir kun oldin Telegram orqali avtomatik eslatma yuboradi.",
+        },
+        {
+          title: "Ta'lim yordamchisi bot",
+          desc: "DTM/attestatsiya testlariga tayyorgarlik va uy vazifasini AI yordamida bosqichma-bosqich yechish uchun Telegram bot + Mini App. Rollarga ajratilgan admin panel va obuna tizimini o'z ichiga oladi.",
+        },
       ],
     },
     contact: {
@@ -228,6 +240,18 @@ const translations = {
         {
           title: 'Погода',
           desc: 'Приложение, показывающее текущую погоду по названию города в реальном времени через бесплатный открытый API.',
+        },
+        {
+          title: 'ChorvaBozor',
+          desc: 'Платформа торговли скотом, объединяющая фермеров и покупателей: размещение объявлений, поиск, фильтрация по категории/региону/цене и прямая связь с продавцом. Работает на Cloudflare Workers, D1 и R2 — полностью бесплатная инфраструктура.',
+        },
+        {
+          title: 'Бот-уведомитель о Zoom-мероприятиях',
+          desc: 'Каждый час проверяет объявления на сайте uzswlu.uz о мероприятиях через Zoom и автоматически присылает в Telegram напоминание за день до события.',
+        },
+        {
+          title: 'Образовательный бот-помощник',
+          desc: 'Telegram-бот + Mini App для подготовки к тестам ДТМ/аттестации и пошагового решения домашних заданий с помощью ИИ. Включает ролевую админ-панель и систему подписки.',
         },
       ],
     },
