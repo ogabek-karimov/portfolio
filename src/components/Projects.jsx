@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useLanguage } from '../i18n/LanguageContext'
 import './Projects.css'
 import todoImg from '../assets/project-todo.png'
@@ -43,8 +43,8 @@ const projectMeta = [
   },
 ]
 
-const PAGE_SIZE = 3
-const AUTO_ROTATE_MS = 5000
+const SPEED_PX_PER_SEC = 26
+const GAP_PX = 24
 
 function ChevronIcon({ direction }) {
   const d = direction === 'left' ? 'M15 18l-6-6 6-6' : 'M9 18l6-6-6-6'
@@ -55,34 +55,90 @@ function ChevronIcon({ direction }) {
   )
 }
 
-function chunk(items, size) {
-  const pages = []
-  for (let i = 0; i < items.length; i += size) {
-    pages.push(items.slice(i, i + size))
-  }
-  return pages
+function ProjectCard({ project, dict }) {
+  return (
+    <div className="project-card">
+      {project.image ? (
+        <a href={project.demo} target="_blank" rel="noreferrer" className="project-thumb-link">
+          <img src={project.image} alt={project.title} className="project-thumb" />
+        </a>
+      ) : (
+        <div className="project-thumb-placeholder">
+          <span>{project.icon}</span>
+        </div>
+      )}
+      <div className="project-body">
+        <h3>{project.title}</h3>
+        <p>{project.desc}</p>
+        <div className="project-tags">
+          {project.tags.map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
+        </div>
+        <div className="project-links">
+          {project.demo && (
+            <a href={project.demo} target="_blank" rel="noreferrer" className="btn btn-outline">
+              {dict.projects.liveDemo}
+            </a>
+          )}
+          <a href={project.code} target="_blank" rel="noreferrer" className="btn btn-outline">
+            {dict.projects.github}
+          </a>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function Projects() {
   const { dict } = useLanguage()
   const projects = projectMeta.map((meta, i) => ({ ...meta, ...dict.projects.items[i] }))
-  const pages = chunk(projects, PAGE_SIZE)
-  const totalPages = pages.length
+  const loopedProjects = [...projects, ...projects]
 
-  const [page, setPage] = useState(0)
+  const trackRef = useRef(null)
+  const offsetRef = useRef(0)
   const pausedRef = useRef(false)
+  const lastTsRef = useRef(null)
+  const rafRef = useRef(null)
 
   useEffect(() => {
-    if (totalPages <= 1) return undefined
-    const interval = setInterval(() => {
-      if (pausedRef.current) return
-      setPage((p) => (p + 1) % totalPages)
-    }, AUTO_ROTATE_MS)
-    return () => clearInterval(interval)
-  }, [totalPages])
+    offsetRef.current = 0
+    lastTsRef.current = null
 
-  function goTo(next) {
-    setPage((next + totalPages) % totalPages)
+    function tick(timestamp) {
+      const track = trackRef.current
+      if (track) {
+        if (lastTsRef.current === null) lastTsRef.current = timestamp
+        const dt = (timestamp - lastTsRef.current) / 1000
+        lastTsRef.current = timestamp
+
+        if (!pausedRef.current) {
+          const singleSetWidth = track.scrollWidth / 2
+          let next = offsetRef.current + SPEED_PX_PER_SEC * dt
+          if (next >= singleSetWidth) next -= singleSetWidth
+          offsetRef.current = next
+          track.style.transform = `translateX(-${next}px)`
+        }
+      }
+      rafRef.current = requestAnimationFrame(tick)
+    }
+
+    rafRef.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [projects.length])
+
+  function step(direction) {
+    const track = trackRef.current
+    if (!track) return
+    const firstCard = track.children[0]
+    if (!firstCard) return
+    const cardStep = firstCard.getBoundingClientRect().width + GAP_PX
+    const singleSetWidth = track.scrollWidth / 2
+
+    let next = offsetRef.current + direction * cardStep
+    next = ((next % singleSetWidth) + singleSetWidth) % singleSetWidth
+    offsetRef.current = next
+    track.style.transform = `translateX(-${next}px)`
   }
 
   return (
@@ -97,68 +153,31 @@ function Projects() {
         onMouseEnter={() => (pausedRef.current = true)}
         onMouseLeave={() => (pausedRef.current = false)}
       >
-        {totalPages > 1 && (
-          <button
-            type="button"
-            className="carousel-arrow carousel-arrow-left"
-            onClick={() => goTo(page - 1)}
-            aria-label={dict.projects.prevLabel}
-          >
-            <ChevronIcon direction="left" />
-          </button>
-        )}
+        <button
+          type="button"
+          className="carousel-arrow carousel-arrow-left"
+          onClick={() => step(-1)}
+          aria-label={dict.projects.prevLabel}
+        >
+          <ChevronIcon direction="left" />
+        </button>
 
         <div className="projects-track-viewport">
-          <div className="projects-track" style={{ transform: `translateX(-${page * 100}%)` }}>
-            {pages.map((pageItems, pageIndex) => (
-              <div className="projects-grid" key={pageIndex}>
-                {pageItems.map((project) => (
-                  <div className="project-card" key={project.code}>
-                    {project.image ? (
-                      <a href={project.demo} target="_blank" rel="noreferrer" className="project-thumb-link">
-                        <img src={project.image} alt={project.title} className="project-thumb" />
-                      </a>
-                    ) : (
-                      <div className="project-thumb-placeholder">
-                        <span>{project.icon}</span>
-                      </div>
-                    )}
-                    <div className="project-body">
-                      <h3>{project.title}</h3>
-                      <p>{project.desc}</p>
-                      <div className="project-tags">
-                        {project.tags.map((tag) => (
-                          <span key={tag}>{tag}</span>
-                        ))}
-                      </div>
-                      <div className="project-links">
-                        {project.demo && (
-                          <a href={project.demo} target="_blank" rel="noreferrer" className="btn btn-outline">
-                            {dict.projects.liveDemo}
-                          </a>
-                        )}
-                        <a href={project.code} target="_blank" rel="noreferrer" className="btn btn-outline">
-                          {dict.projects.github}
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          <div className="projects-track" ref={trackRef}>
+            {loopedProjects.map((project, i) => (
+              <ProjectCard project={project} dict={dict} key={`${project.code}-${i}`} />
             ))}
           </div>
         </div>
 
-        {totalPages > 1 && (
-          <button
-            type="button"
-            className="carousel-arrow carousel-arrow-right"
-            onClick={() => goTo(page + 1)}
-            aria-label={dict.projects.nextLabel}
-          >
-            <ChevronIcon direction="right" />
-          </button>
-        )}
+        <button
+          type="button"
+          className="carousel-arrow carousel-arrow-right"
+          onClick={() => step(1)}
+          aria-label={dict.projects.nextLabel}
+        >
+          <ChevronIcon direction="right" />
+        </button>
       </div>
     </section>
   )
