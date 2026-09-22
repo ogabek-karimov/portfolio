@@ -32,6 +32,8 @@ const translations = {
       subtitle: "Ba'zi ishlarim",
       liveDemo: 'Live demo',
       github: 'GitHub',
+      prevLabel: 'Oldingi loyihalar',
+      nextLabel: 'Keyingi loyihalar',
       items: [
         {
           title: 'To-Do List',
@@ -228,6 +230,8 @@ const translations = {
       subtitle: 'Некоторые мои работы',
       liveDemo: 'Live demo',
       github: 'GitHub',
+      prevLabel: 'Предыдущие проекты',
+      nextLabel: 'Следующие проекты',
       items: [
         {
           title: 'To-Do List',
