@@ -53,7 +53,7 @@ const translations = {
         },
         {
           title: "Zoom e'lon bot",
-          desc: "uzswlu.uz saytidagi Zoom orqali o'tkaziladigan tadbirlar haqidagi e'lonlarni soatlik tekshirib, tadbirdan bir kun oldin Telegram orqali avtomatik eslatma yuboradi.",
+          desc: "Universitet saytidagi Zoom orqali o'tkaziladigan tadbirlar haqidagi e'lonlarni soatlik tekshirib, tadbirdan bir kun oldin Telegram orqali avtomatik eslatma yuboradi.",
         },
         {
           title: "Ta'lim yordamchisi bot",
@@ -251,7 +251,7 @@ const translations = {
         },
         {
           title: 'Бот-уведомитель о Zoom-мероприятиях',
-          desc: 'Каждый час проверяет объявления на сайте uzswlu.uz о мероприятиях через Zoom и автоматически присылает в Telegram напоминание за день до события.',
+          desc: 'Каждый час проверяет объявления на сайте университета о мероприятиях через Zoom и автоматически присылает в Telegram напоминание за день до события.',
         },
         {
           title: 'Образовательный бот-помощник',
