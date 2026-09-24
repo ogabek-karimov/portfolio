@@ -54,10 +54,26 @@ const translations = {
         {
           title: "Zoom e'lon bot",
           desc: "Universitet saytidagi Zoom orqali o'tkaziladigan tadbirlar haqidagi e'lonlarni soatlik tekshirib, tadbirdan bir kun oldin Telegram orqali avtomatik eslatma yuboradi.",
+          chat: {
+            name: "Zoom e'lon bot",
+            status: 'bot',
+            chip: 'Bugun',
+            reply: ["⏰ Eslatma: ertaga 14:00 da ZOOM orqali bo'lib o'tadi:", 'Ilmiy seminar muhokamasi'],
+            link: "🔗 E'lon havolasi",
+            time: '17:00',
+          },
         },
         {
           title: "Ta'lim yordamchisi bot",
           desc: "DTM/attestatsiya testlariga tayyorgarlik va uy vazifasini AI yordamida bosqichma-bosqich yechish uchun Telegram bot + Mini App. Rollarga ajratilgan admin panel va obuna tizimini o'z ichiga oladi.",
+          chat: {
+            name: "Ta'lim yordamchisi",
+            status: 'bot',
+            user: '2x + 6 = 14 ni yeching',
+            reply: ['1) 2x = 14 − 6 = 8', '2) x = 8 ÷ 2 = 4 ✅'],
+            buttons: ['📚 Testlar', '✍️ Uy vazifasi'],
+            time: '19:42',
+          },
         },
       ],
     },
@@ -252,10 +268,26 @@ const translations = {
         {
           title: 'Бот-уведомитель о Zoom-мероприятиях',
           desc: 'Каждый час проверяет объявления на сайте университета о мероприятиях через Zoom и автоматически присылает в Telegram напоминание за день до события.',
+          chat: {
+            name: "Zoom e'lon bot",
+            status: 'бот',
+            chip: 'Сегодня',
+            reply: ['⏰ Напоминание: завтра в 14:00 через ZOOM пройдёт:', 'Научный семинар'],
+            link: '🔗 Ссылка на объявление',
+            time: '17:00',
+          },
         },
         {
           title: 'Образовательный бот-помощник',
           desc: 'Telegram-бот + Mini App для подготовки к тестам ДТМ/аттестации и пошагового решения домашних заданий с помощью ИИ. Включает ролевую админ-панель и систему подписки.',
+          chat: {
+            name: 'Учебный помощник',
+            status: 'бот',
+            user: 'Реши 2x + 6 = 14',
+            reply: ['1) 2x = 14 − 6 = 8', '2) x = 8 ÷ 2 = 4 ✅'],
+            buttons: ['📚 Тесты', '✍️ Домашка'],
+            time: '19:42',
+          },
         },
       ],
     },
