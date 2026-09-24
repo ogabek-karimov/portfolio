@@ -8,7 +8,7 @@ const API_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
 const DEFAULT_RESUME = {
   contact: {
     email: 'bek8896ok@gmail.com',
-    telegram: 't.me/bek_xacker',
+    telegram: 't.me/Uzswlu_rttm',
     website: 'ogabek-karimov.github.io/portfolio',
   },
   uz: {

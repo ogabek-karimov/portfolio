@@ -3,8 +3,6 @@ const ALLOWED_ORIGINS = [
   'http://localhost:5173',
 ]
 
-const TELEGRAM_CHAT_ID = '890701906'
-
 function corsHeaders(origin) {
   const allowOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0]
   return {
@@ -61,11 +59,11 @@ function isGibberish(text) {
   return false
 }
 
-async function sendTelegram(token, text) {
-  return fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+async function sendTelegram(env, text) {
+  return fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text }),
+    body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text }),
   })
 }
 
@@ -122,7 +120,7 @@ async function handleContactForm(request, env, headers) {
     `Xabar: ${message.trim()}`,
   ].join('\n')
 
-  const telegramRes = await sendTelegram(env.TELEGRAM_BOT_TOKEN, text)
+  const telegramRes = await sendTelegram(env, text)
   if (!telegramRes.ok) return json({ error: 'Xabar yuborilmadi' }, 502, headers)
 
   return json({ ok: true }, 200, headers)
@@ -152,7 +150,7 @@ async function handleRequestOtp(request, env, headers) {
   await env.SITE_CONTENT.put(attemptsKey, String(attempts + 1), { expirationTtl: 900 })
 
   const text = `Admin panelga kirish kodi: ${code}\n(5 daqiqa amal qiladi)`
-  const telegramRes = await sendTelegram(env.TELEGRAM_BOT_TOKEN, text)
+  const telegramRes = await sendTelegram(env, text)
   if (!telegramRes.ok) return json({ error: 'Kod yuborilmadi' }, 502, headers)
 
   return json({ ok: true }, 200, headers)

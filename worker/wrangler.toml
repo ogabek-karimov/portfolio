@@ -5,3 +5,7 @@ compatibility_date = "2026-08-01"
 [[kv_namespaces]]
 binding = "SITE_CONTENT"
 id = "b8fbfc3a5e98435eaa7aa8671d7e8315"
+
+# Secrets (set with `wrangler secret put`, never committed):
+#   TELEGRAM_BOT_TOKEN
+#   TELEGRAM_CHAT_ID

@@ -48,7 +48,7 @@ const DEFAULT_CONTENT = {
     hidden: false,
     contact: {
       email: 'bek8896ok@gmail.com',
-      telegram: 't.me/bek_xacker',
+      telegram: 't.me/Uzswlu_rttm',
       website: 'ogabek-karimov.github.io/portfolio',
     },
     uz: {
