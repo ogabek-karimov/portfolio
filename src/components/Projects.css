@@ -9,6 +9,17 @@
   max-width: calc(100% - 48px);
   margin: 0 auto;
   padding: 4px 0 8px;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.projects-track-viewport.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.projects-track-viewport.is-dragging .project-card {
+  pointer-events: none;
 }
 
 .projects-track {
