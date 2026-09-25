@@ -51,8 +51,9 @@ function Navbar() {
   return (
     <header className="navbar">
       <div className="container navbar-inner">
-        <Link to="/" className="logo">
-          Og'abek Karimov
+        <Link to="/" className="logo-link">
+          <span className="logo">Og'abek Karimov</span>
+          <span className="logo-subtitle">{dict.hero.role}</span>
         </Link>
 
         <nav className={`nav-links ${open ? 'open' : ''}`}>
