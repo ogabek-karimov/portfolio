@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 import './NotFoundPage.css'
 
 function NotFoundPage() {
   const { dict } = useLanguage()
+  useDocumentTitle(dict.notFound.subtitle)
   const starsRef = useRef(null)
 
   useEffect(() => {

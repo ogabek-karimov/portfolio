@@ -1,0 +1,108 @@
+.lang-menu {
+  position: relative;
+}
+
+.lang-menu-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 10px 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-h);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.lang-menu-button:hover,
+.lang-menu.is-open .lang-menu-button {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* the chevron flips while the list is open */
+.lang-menu-chevron {
+  transition: transform 0.25s ease;
+}
+
+.lang-menu.is-open .lang-menu-chevron {
+  transform: rotate(180deg);
+}
+
+.lang-menu-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 60;
+  min-width: 176px;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  animation: lang-menu-in 0.18s ease;
+}
+
+.lang-menu-list button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--text-h);
+  text-align: left;
+  background: none;
+  cursor: pointer;
+}
+
+.lang-menu-list button:hover {
+  background: var(--bg-alt);
+}
+
+.lang-menu-list button.is-active {
+  color: var(--accent);
+}
+
+.lang-menu-code {
+  min-width: 24px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.lang-menu-check {
+  margin-left: auto;
+}
+
+@keyframes lang-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-menu-list,
+  .lang-menu-chevron {
+    animation: none;
+    transition: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .lang-menu-button {
+    height: 32px;
+    padding: 0 8px 0 9px;
+  }
+}

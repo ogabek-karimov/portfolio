@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../i18n/LanguageContext'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 import { useAdminAuth } from '../admin/AdminAuthContext'
 import translations from '../i18n/translations'
 import './AdminPage.css'
@@ -39,10 +40,12 @@ const DEFAULT_CONTENT = {
   experience: {
     uz: translations.uz.experience.items.map((i) => ({ ...i, hidden: false })),
     ru: translations.ru.experience.items.map((i) => ({ ...i, hidden: false })),
+    en: translations.en.experience.items.map((i) => ({ ...i, hidden: false })),
   },
   certificates: {
     uz: translations.uz.certificates.items.map((c) => ({ ...c, imageId: '', hidden: false })),
     ru: translations.ru.certificates.items.map((c) => ({ ...c, imageId: '', hidden: false })),
+    en: translations.en.certificates.items.map((c) => ({ ...c, imageId: '', hidden: false })),
   },
   resume: {
     hidden: false,
@@ -65,11 +68,19 @@ const DEFAULT_CONTENT = {
         'Я frontend-разработчик, создаю удобные и красивые интерфейсы для пользователей. Начав с HTML, CSS и JavaScript, сейчас работаю с библиотекой React, а также изучаю сборку проектов и серверную часть с помощью Node.js.',
       skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Figma', 'Photoshop', 'Node.js', 'Python', 'Telegram-боты', 'Git / GitHub'],
     },
+    en: {
+      name: "Og'abek Karimov",
+      role: 'Frontend Developer',
+      about:
+        "I'm a frontend developer who builds friendly, good-looking interfaces. I started with HTML, CSS and JavaScript, now work with the React library, and I'm learning project builds and the server side with Node.js.",
+      skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Figma', 'Photoshop', 'Node.js', 'Python', 'Telegram bots', 'Git / GitHub'],
+    },
   },
 }
 
 function AdminPage() {
   const { lang, dict } = useLanguage()
+  useDocumentTitle('Admin')
   const t = dict.admin
   const { isAdmin, login, expireSession, expiredReason } = useAdminAuth()
 
@@ -119,6 +130,12 @@ function AdminPage() {
           data.resume && data.resume.contact
             ? { ...data.resume, hidden: Boolean(data.resume.hidden) }
             : DEFAULT_CONTENT.resume
+        // a language added after the content was saved starts from the built-in text
+        for (const l of ['uz', 'ru', 'en']) {
+          if (!Array.isArray(exp[l])) exp[l] = DEFAULT_CONTENT.experience[l]
+          if (!Array.isArray(certs[l])) certs[l] = DEFAULT_CONTENT.certificates[l]
+          if (!res[l]) res[l] = DEFAULT_CONTENT.resume[l]
+        }
         setExperience(exp)
         setCertificates(certs)
         setResume(res)

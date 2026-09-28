@@ -1,19 +1,23 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../i18n/LanguageContext'
-import profilePhoto from '../assets/profile.jpg'
+import avatarPhoto from '../assets/profile-card.jpg'
 import { playUnlockSound } from '../utils/sounds'
+import { isInUzbekistan } from '../i18n/detectLanguage'
 import SectionHeading from './SectionHeading'
 import './Contact.css'
 
 const RELAY_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
 const UZ_PHONE_RE = /^\+998\d{9}$/
+// any other country: "+" and 8-15 digits (the international E.164 length)
+const INTL_PHONE_RE = /^\+(?!998)\d{8,15}$/
 
 function isValidPhone(value) {
   const normalized = value.replace(/[\s()-]/g, '')
-  return UZ_PHONE_RE.test(normalized)
+  return UZ_PHONE_RE.test(normalized) || INTL_PHONE_RE.test(normalized)
 }
 
 const PHONE_PREFIX = '+998 ('
+const INTL_PREFIX = '+'
 const PHONE_TEMPLATE = '+998 (XX) XXX-XX-XX'
 
 function extractDigits(value) {
@@ -123,7 +127,13 @@ function Contact() {
   const [opened, setOpened] = useState(false)
   const appOpen = opened || compact
 
-  const [form, setForm] = useState({ name: '', phone: PHONE_PREFIX, message: '', website: '' })
+  // visitors in Uzbekistan start from the +998 mask, everyone else from a bare "+"
+  const [form, setForm] = useState(() => ({
+    name: '',
+    phone: isInUzbekistan() ? PHONE_PREFIX : INTL_PREFIX,
+    message: '',
+    website: '',
+  }))
   const [fieldError, setFieldError] = useState(null)
   const [sending, setSending] = useState(false)
   const [thread, setThread] = useState([])
@@ -178,17 +188,29 @@ function Contact() {
 
   function handlePhoneChange(e) {
     const raw = e.target.value
-    let digits = extractDigits(raw)
+    const allDigits = raw.replace(/\D/g, '')
+    if (fieldError === 'phone') setFieldError(null)
 
+    // any other country code is typed freely
+    if (!allDigits.startsWith('998')) {
+      setForm({ ...form, phone: INTL_PREFIX + allDigits.slice(0, 15) })
+      return
+    }
+
+    // Uzbek numbers keep the familiar +998 (XX) XXX-XX-XX mask
+    let digits = extractDigits(raw)
     if (raw.length < form.phone.length) {
       const prevDigits = extractDigits(form.phone)
-      if (digits.length === prevDigits.length && digits.length > 0) {
+      if (digits.length === prevDigits.length) {
+        if (digits.length === 0) {
+          // erasing past the mask steps out of +998 so another code can be typed
+          setForm({ ...form, phone: '+99' })
+          return
+        }
         digits = digits.slice(0, -1)
       }
     }
-
     setForm({ ...form, phone: formatPhoneDigits(digits) })
-    if (fieldError === 'phone') setFieldError(null)
   }
 
   function updateBubble(id, patch) {
@@ -241,7 +263,7 @@ function Contact() {
     }
 
     setFieldError(null)
-    const payload = { ...form, message: form.message.trim() }
+    const payload = { ...form, message: form.message.trim(), lang }
     const id = nextId.current++
     setThread((list) => [...list, { id, from: 'me', text: payload.message, status: 'sending', payload }])
     setForm({ ...form, message: '' })
@@ -257,10 +279,12 @@ function Contact() {
 
   const errorText = { name: t.errorName, phone: t.errorPhone, message: t.errorGibberish }[fieldError]
   const lastMineId = [...thread].reverse().find((b) => b.from === 'me')?.id
-  const dateLine =
-    lang === 'ru'
-      ? `${t.weekdays[now.getDay()]}, ${now.getDate()} ${t.months[now.getMonth()]}`
-      : `${t.weekdays[now.getDay()]}, ${now.getDate()}-${t.months[now.getMonth()]}`
+  const [weekday, day, month] = [t.weekdays[now.getDay()], now.getDate(), t.months[now.getMonth()]]
+  const dateLine = {
+    uz: `${weekday}, ${day}-${month}`,
+    ru: `${weekday}, ${day} ${month}`,
+    en: `${weekday}, ${month} ${day}`,
+  }[lang]
 
   return (
     <section id="contact" className="contact">
@@ -313,7 +337,7 @@ function Contact() {
                     </svg>
                   </button>
                 )}
-                <img src={profilePhoto} alt="" className="ios-avatar" />
+                <img src={avatarPhoto} alt="" className="ios-avatar" />
                 <span className="ios-contact-name">Og'abek Karimov</span>
               </header>
 

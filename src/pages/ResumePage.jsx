@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 import './ResumePage.css'
 
 const API_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
@@ -25,6 +26,13 @@ const DEFAULT_RESUME = {
       'Я frontend-разработчик, создаю удобные и красивые интерфейсы для пользователей. Начав с HTML, CSS и JavaScript, сейчас работаю с библиотекой React, а также изучаю сборку проектов и серверную часть с помощью Node.js.',
     skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Figma', 'Photoshop', 'Node.js', 'Python', 'Telegram-боты', 'Git / GitHub'],
   },
+  en: {
+    name: "Og'abek Karimov",
+    role: 'Frontend Developer',
+    about:
+      "I'm a frontend developer who builds friendly, good-looking interfaces. I started with HTML, CSS and JavaScript, now work with the React library, and I'm learning project builds and the server side with Node.js.",
+    skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Figma', 'Photoshop', 'Node.js', 'Python', 'Telegram bots', 'Git / GitHub'],
+  },
 }
 
 const LABELS = {
@@ -41,17 +49,28 @@ const LABELS = {
   ru: {
     backLink: '← Вернуться на главную',
     print: 'Печать (PDF)',
-    pdfLink: 'или скачать готовый PDF-файл',
+    pdfLink: 'или скачать готовый PDF (на узбекском)',
     about: 'Обо мне',
     skills: 'Навыки',
     experience: 'Образование и опыт',
     projects: 'Проекты',
     unavailable: 'Резюме пока недоступно.',
   },
+  en: {
+    backLink: '← Back to home',
+    print: 'Print (PDF)',
+    pdfLink: 'or download the ready-made PDF (in Uzbek)',
+    about: 'About me',
+    skills: 'Skills',
+    experience: 'Education & experience',
+    projects: 'Projects',
+    unavailable: 'The resume is not available yet.',
+  },
 }
 
 function ResumePage() {
   const { lang, dict } = useLanguage()
+  useDocumentTitle(dict.nav.resume)
   const [resume, setResume] = useState(null)
   const [experienceItems, setExperienceItems] = useState(dict.experience.items)
 
@@ -84,7 +103,8 @@ function ResumePage() {
 
   if (!resume) return null
 
-  const p = resume[lang]
+  // content saved before a language existed falls back to the built-in text
+  const p = resume[lang] || DEFAULT_RESUME[lang]
 
   if (resume.hidden) {
     return (

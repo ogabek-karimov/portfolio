@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import SectionHeading from '../components/SectionHeading'
+import useDocumentTitle from '../hooks/useDocumentTitle'
 import './SubPage.css'
 
 const API_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
 
 function CertificatesPage() {
   const { lang, dict } = useLanguage()
+  useDocumentTitle(dict.certificates.title)
   const { certificates } = dict
   const [items, setItems] = useState(null)
   const [isCustom, setIsCustom] = useState(false)

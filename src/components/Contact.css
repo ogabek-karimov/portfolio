@@ -32,6 +32,10 @@ textarea:focus {
   opacity: 0;
 }
 
+.contact {
+  background: var(--bg-alt);
+}
+
 /* ---------- phone frame ---------- */
 
 .iphone {
@@ -347,7 +351,6 @@ textarea:focus {
   height: 46px;
   border-radius: 999px;
   object-fit: cover;
-  object-position: 50% 9%;
 }
 
 .ios-contact-name {

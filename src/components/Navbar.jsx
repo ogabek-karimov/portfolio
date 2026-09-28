@@ -4,6 +4,7 @@ import { useLanguage } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeContext'
 import { useAdminAuth } from '../admin/AdminAuthContext'
 import { scrollToTop } from '../utils/scroll'
+import LanguageMenu from './LanguageMenu'
 import './Navbar.css'
 
 function Navbar() {
@@ -11,7 +12,7 @@ function Navbar() {
   const [aboutOpen, setAboutOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const profileRef = useRef(null)
-  const { lang, setLang, dict } = useLanguage()
+  const { dict } = useLanguage()
   const { theme, toggleTheme } = useTheme()
   const { isAdmin, logout } = useAdminAuth()
   const navigate = useNavigate()
@@ -119,22 +120,7 @@ function Navbar() {
             {theme === 'dark' ? '🌙' : '☀️'}
           </button>
 
-          <div className="lang-switch">
-            <button
-              type="button"
-              className={lang === 'uz' ? 'active' : ''}
-              onClick={() => setLang('uz')}
-            >
-              UZ
-            </button>
-            <button
-              type="button"
-              className={lang === 'ru' ? 'active' : ''}
-              onClick={() => setLang('ru')}
-            >
-              RU
-            </button>
-          </div>
+          <LanguageMenu />
 
           {isAdmin && (
             <div className="profile-menu" ref={profileRef}>

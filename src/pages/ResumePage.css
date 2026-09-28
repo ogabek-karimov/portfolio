@@ -187,6 +187,8 @@
     display: none !important;
   }
 
+  /* the page root carries the lavender theme background; paper stays white */
+  :root,
   body {
     background: #fff;
   }

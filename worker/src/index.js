@@ -24,11 +24,46 @@ function isValidField(value, maxLength) {
 }
 
 const UZ_PHONE_RE = /^\+998\d{9}$/
+// any other country: "+" and 8-15 digits (the international E.164 length)
+const INTL_PHONE_RE = /^\+(?!998)\d{8,15}$/
 
 function isValidPhone(value) {
   if (typeof value !== 'string') return false
   const normalized = value.replace(/[\s()-]/g, '')
   return UZ_PHONE_RE.test(normalized)
+}
+
+// The contact form also accepts visitors from other countries (admin login stays Uzbek-only).
+function isValidContactPhone(value) {
+  if (typeof value !== 'string') return false
+  const normalized = value.replace(/[\s()-]/g, '')
+  return UZ_PHONE_RE.test(normalized) || INTL_PHONE_RE.test(normalized)
+}
+
+const CONTACT_LANGS = { uz: "O'zbekcha", ru: 'Русский', en: 'English' }
+
+// Contact form errors in the visitor's language.
+const CONTACT_ERRORS = {
+  fields: {
+    uz: "Barcha maydonlarni to'g'ri to'ldiring",
+    ru: 'Заполните все поля правильно',
+    en: 'Please fill in all fields correctly',
+  },
+  phone: {
+    uz: "Telefon raqam noto'g'ri: +998XXXXXXXXX yoki xalqaro formatda kiriting",
+    ru: 'Неверный номер: введите +998XXXXXXXXX или в международном формате',
+    en: 'Invalid phone number: use the international format, e.g. +1 555 123 4567',
+  },
+  message: {
+    uz: "Xabar tushunarli va kamida 15 ta belgidan iborat bo'lishi kerak",
+    ru: 'Сообщение должно быть понятным и не короче 15 символов',
+    en: 'The message must be clear and at least 15 characters long',
+  },
+  send: {
+    uz: 'Xabar yuborilmadi',
+    ru: 'Сообщение не отправлено',
+    en: 'The message was not sent',
+  },
 }
 
 const VOWELS = 'aeiouаеёиоуыэюя'
@@ -90,38 +125,32 @@ async function handleContactForm(request, env, headers) {
   }
 
   const { name, phone, message, website } = body
+  const lang = Object.hasOwn(CONTACT_LANGS, body.lang) ? body.lang : 'uz'
 
   if (website) return json({ ok: true }, 200, headers)
 
   if (!isValidField(name, 100) || !isValidField(phone, 30) || !isValidField(message, 2000)) {
-    return json({ error: "Barcha maydonlarni to'g'ri to'ldiring" }, 400, headers)
+    return json({ error: CONTACT_ERRORS.fields[lang] }, 400, headers)
   }
 
-  if (!isValidPhone(phone)) {
-    return json(
-      { error: "Telefon raqam noto'g'ri, +998XXXXXXXXX ko'rinishida kiriting" },
-      400,
-      headers,
-    )
+  if (!isValidContactPhone(phone)) {
+    return json({ error: CONTACT_ERRORS.phone[lang] }, 400, headers)
   }
 
   if (isGibberish(message)) {
-    return json(
-      { error: "Xabar tushunarli va kamida 15 ta belgidan iborat bo'lishi kerak" },
-      400,
-      headers,
-    )
+    return json({ error: CONTACT_ERRORS.message[lang] }, 400, headers)
   }
 
   const text = [
     'Yangi xabar — portfolio saytidan',
     `Ism: ${name.trim()}`,
     `Telefon: ${phone.trim()}`,
+    `Til: ${CONTACT_LANGS[lang]}`,
     `Xabar: ${message.trim()}`,
   ].join('\n')
 
   const telegramRes = await sendTelegram(env, text)
-  if (!telegramRes.ok) return json({ error: 'Xabar yuborilmadi' }, 502, headers)
+  if (!telegramRes.ok) return json({ error: CONTACT_ERRORS.send[lang] }, 502, headers)
 
   return json({ ok: true }, 200, headers)
 }

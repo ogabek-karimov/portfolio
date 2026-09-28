@@ -1,0 +1,159 @@
+.services {
+  background: var(--bg-alt);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 1052px;
+  margin: 0 auto;
+}
+
+.service-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 28px 24px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+/* hover: an accent line draws across the top and the icon fills in */
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s ease;
+}
+
+.service-card:hover::before {
+  transform: scaleX(1);
+}
+
+.service-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.service-card:hover .service-icon {
+  color: #fff;
+  background: var(--accent);
+}
+
+.service-card h3 {
+  margin-top: 18px;
+  font-family: var(--display);
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.service-card p {
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text);
+}
+
+.service-card ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.service-card li {
+  position: relative;
+  padding-left: 24px;
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.service-card li::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 2px;
+  width: 10px;
+  height: 5px;
+  border-left: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: rotate(-45deg);
+}
+
+.service-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+.service-price {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+}
+
+/* "order" link: its underline sweeps in and the arrow steps forward */
+.service-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 2px;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--accent);
+  white-space: nowrap;
+  background: linear-gradient(currentColor, currentColor) no-repeat left bottom / 0% 1.5px;
+  transition: background-size 0.3s ease;
+}
+
+.service-cta span {
+  transition: transform 0.25s ease;
+}
+
+.service-cta:hover {
+  background-size: 100% 1.5px;
+}
+
+.service-cta:hover span {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card::before,
+  .service-icon,
+  .service-cta,
+  .service-cta span {
+    transition: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .service-card {
+    padding: 22px 20px 20px;
+  }
+}

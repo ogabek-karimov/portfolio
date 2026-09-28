@@ -1,4 +1,4 @@
-// `name` is a brand name shown as is, or { uz, ru } when it needs translating.
+// `name` is a brand name shown as is, or { uz, ru, en } when it needs translating.
 // Icons are white on the brand color unless iconBg/iconFg say otherwise.
 export const skills = [
   { id: 'html', name: 'HTML5', level: 90, icon: 'html5', color: '#E34F26' },
@@ -19,6 +19,6 @@ export const skills = [
   },
   { id: 'node', name: 'Node.js', level: 65, icon: 'node', color: '#5FA04E' },
   { id: 'python', name: 'Python', level: 60, icon: 'python', color: '#3776AB' },
-  { id: 'bots', name: { uz: 'Telegram botlar', ru: 'Telegram-боты' }, level: 75, icon: 'telegram', color: '#26A5E4' },
+  { id: 'bots', name: { uz: 'Telegram botlar', ru: 'Telegram-боты', en: 'Telegram bots' }, level: 75, icon: 'telegram', color: '#26A5E4' },
   { id: 'git', name: 'Git / GitHub', level: 70, icon: 'git', color: '#F05032' },
 ]
