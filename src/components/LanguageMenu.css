@@ -2,12 +2,29 @@
   position: relative;
 }
 
+/* flags share one small rounded box; a hairline keeps white stripes visible on white */
+.flag {
+  display: block;
+  flex-shrink: 0;
+  width: 21px;
+  height: 15px;
+  overflow: hidden;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.14);
+}
+
+.flag svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .lang-menu-button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   height: 34px;
-  padding: 0 10px 0 11px;
+  padding: 0 10px 0 9px;
   border: 1px solid var(--border);
   border-radius: 999px;
   font: inherit;
@@ -40,7 +57,7 @@
   top: calc(100% + 8px);
   right: 0;
   z-index: 60;
-  min-width: 176px;
+  min-width: 118px;
   padding: 6px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -54,7 +71,7 @@
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 9px 10px;
+  padding: 8px 10px;
   border: none;
   border-radius: 8px;
   font: inherit;
@@ -76,9 +93,9 @@
 .lang-menu-code {
   min-width: 24px;
   font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  color: inherit;
 }
 
 .lang-menu-check {
@@ -103,6 +120,19 @@
 @media (max-width: 380px) {
   .lang-menu-button {
     height: 32px;
-    padding: 0 8px 0 9px;
+    padding: 0 8px 0 7px;
+  }
+}
+
+/* the narrowest phones: a slightly smaller flag keeps room next to the logo */
+@media (max-width: 340px) {
+  .lang-menu-button {
+    gap: 5px;
+    padding: 0 7px 0 6px;
+  }
+
+  .lang-menu-button .flag {
+    width: 18px;
+    height: 13px;
   }
 }

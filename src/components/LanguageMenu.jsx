@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../i18n/LanguageContext'
+import Flag from './Flag'
 import './LanguageMenu.css'
 
-// Each language is listed under its own name, so anyone can find theirs.
+// Shown as flag + code; the native name stays as the tooltip and accessible label.
 const OPTIONS = [
   { code: 'uz', label: "O'zbekcha" },
   { code: 'ru', label: 'Русский' },
@@ -45,10 +46,7 @@ function LanguageMenu() {
         aria-label={dict.nav.language}
         onClick={() => setOpen((o) => !o)}
       >
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M3 12h18 M12 3a14 14 0 0 1 0 18 M12 3a14 14 0 0 0 0 18" />
-        </svg>
+        <Flag code={lang} />
         <span>{lang.toUpperCase()}</span>
         <svg className="lang-menu-chevron" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M6 9l6 6 6-6" />
@@ -65,9 +63,11 @@ function LanguageMenu() {
                 aria-checked={o.code === lang}
                 className={o.code === lang ? 'is-active' : ''}
                 onClick={() => choose(o.code)}
+                aria-label={o.label}
+                title={o.label}
               >
+                <Flag code={o.code} />
                 <span className="lang-menu-code">{o.code.toUpperCase()}</span>
-                {o.label}
                 {o.code === lang && (
                   <svg className="lang-menu-check" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M5 12l5 5 9-10" />
