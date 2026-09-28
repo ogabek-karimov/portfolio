@@ -1,0 +1,114 @@
+/* phones only: a floating frosted bar with the four sections and "to top" */
+.mobile-nav {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .mobile-nav {
+    --top-w: 52px;
+    position: fixed;
+    left: 50%;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px) + var(--lift, 0px));
+    z-index: 90;
+    display: flex;
+    width: min(calc(100% - 24px), 440px);
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    background: color-mix(in srgb, var(--surface) 86%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transform: translate(-50%, calc(100% + 24px));
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .mobile-nav.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    pointer-events: auto;
+  }
+
+  /* the highlight glides to the section being read */
+  .mobile-nav-indicator {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 6px;
+    /* the four section items share what the narrower "to top" item leaves */
+    width: calc((100% - 12px - var(--top-w)) / 4);
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+    transform: translateX(calc(var(--active) * 100%));
+    transition: transform 0.35s ease;
+  }
+
+  .mobile-nav-item {
+    position: relative;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    min-width: 0;
+    padding: 7px 2px 6px;
+    border: none;
+    border-radius: 16px;
+    font: inherit;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text);
+    background: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.2s ease, transform 0.15s ease;
+  }
+
+  .mobile-nav-item span {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .mobile-nav-item.is-active {
+    color: var(--accent);
+  }
+
+  .mobile-nav-item:active {
+    transform: scale(0.92);
+  }
+
+  .mobile-nav-top {
+    flex: 0 0 var(--top-w);
+    color: var(--accent);
+  }
+}
+
+/* the smallest phones: a wider bar and slightly smaller labels so every word fits */
+@media (max-width: 360px) {
+  .mobile-nav {
+    width: calc(100% - 16px);
+  }
+
+  .mobile-nav-item {
+    padding: 7px 0 6px;
+    font-size: 9.5px;
+    letter-spacing: -0.1px;
+  }
+}
+
+@media (max-width: 600px) and (prefers-reduced-motion: reduce) {
+  .mobile-nav,
+  .mobile-nav-indicator {
+    transition: none;
+  }
+}
+
+@media print {
+  .mobile-nav {
+    display: none !important;
+  }
+}

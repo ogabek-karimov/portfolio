@@ -1,42 +1,122 @@
-.about-inner {
-  display: flex;
-  align-items: center;
+.about {
+  position: relative;
+  background: var(--bg-alt);
+}
+
+/* faint dot grid that fades out toward the edges */
+.about::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(color-mix(in srgb, var(--accent) 22%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse at center, #000 20%, transparent 70%);
+  pointer-events: none;
+}
+
+.about .container {
+  position: relative;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   gap: 64px;
+  align-items: center;
+  max-width: 940px;
+  margin: 0 auto;
 }
 
 .about-photo {
-  flex-shrink: 0;
+  width: 260px;
+  margin: 0 0 0 8px;
+  aspect-ratio: 3 / 5;
+  overflow: hidden;
+  border: 2px solid var(--text-h);
+  border-radius: 14px 90px 14px 90px;
+  box-shadow: 8px 8px 0 0 var(--accent);
 }
 
-.about-photo-inner {
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center 20%;
+.about-photo img {
   display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.6s ease;
+}
+
+.about-photo:hover img {
+  transform: scale(1.05);
+}
+
+.about-card {
+  padding: 26px 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
   box-shadow: var(--shadow);
-  outline: 4px solid var(--bg);
-  outline-offset: -4px;
 }
 
-.about-content p {
+.about-hello {
+  margin: 12px 0 4px;
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+.about-card p {
+  margin-top: 14px;
+  font-family: var(--mono);
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--text-h);
+}
+
+.about-card p + .code-tag {
   margin-top: 16px;
-  font-size: 16px;
 }
 
-.about-content p:first-of-type {
-  margin-top: 20px;
+.about-kw {
+  color: var(--accent);
 }
 
-@media (max-width: 768px) {
-  .about-inner {
-    flex-direction: column;
-    text-align: center;
-    gap: 32px;
+@media (max-width: 800px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
   }
 
-  .about-content .section-title {
-    text-align: center !important;
+  .about-photo {
+    order: 1;
+    justify-self: center;
+    width: 220px;
+    margin: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-card {
+    padding: 22px 20px;
+  }
+
+  .about-hello {
+    font-size: 24px;
+  }
+
+  .about-card p {
+    font-size: 13.5px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-grid {
+    gap: 36px;
+  }
+
+  .about-photo {
+    width: 200px;
+    aspect-ratio: 3 / 4;
   }
 }

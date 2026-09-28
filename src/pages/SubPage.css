@@ -87,7 +87,7 @@
 }
 
 .cert-card {
-  background: var(--bg-alt);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 28px 20px;
@@ -213,4 +213,23 @@
   font-size: 14px;
   color: var(--text);
   margin-bottom: 10px;
+}
+
+/* All projects */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
 }

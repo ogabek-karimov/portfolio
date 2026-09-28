@@ -34,25 +34,10 @@
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.3px;
-  background: linear-gradient(
-    100deg,
-    var(--accent) 20%,
-    var(--accent-2) 40%,
-    #ffffff 50%,
-    var(--accent-2) 60%,
-    var(--accent) 80%
-  );
-  background-size: 250% 100%;
+  background: linear-gradient(100deg, var(--accent), var(--accent-2));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: text-shine 6.5s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .logo {
-    animation: none;
-  }
 }
 
 .nav-links {
@@ -79,7 +64,7 @@
   top: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(4px);
-  background: var(--bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
   box-shadow: var(--shadow);
@@ -150,7 +135,7 @@
   height: 34px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: var(--bg-alt);
+  background: var(--surface);
   cursor: pointer;
   font-size: 15px;
   padding: 0;
@@ -160,7 +145,7 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  background: var(--bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
   box-shadow: var(--shadow);
@@ -248,6 +233,10 @@
   background: var(--text-h);
 }
 
+.logo {
+  white-space: nowrap;
+}
+
 @media (max-width: 768px) {
   .menu-toggle {
     display: flex;
@@ -289,5 +278,57 @@
     background: none;
     padding: 4px 0 0 16px;
     min-width: 0;
+  }
+}
+
+/* phones: logo + theme + language + menu must share one row, so everything tightens a step */
+@media (max-width: 480px) {
+  .logo {
+    font-size: 17px;
+  }
+
+  .navbar-right {
+    gap: 10px;
+  }
+
+  .lang-switch button {
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .navbar .container {
+    padding: 0 16px;
+  }
+
+  .logo {
+    font-size: 16px;
+  }
+
+  .navbar-right {
+    gap: 8px;
+  }
+
+  .theme-toggle {
+    width: 32px;
+    height: 32px;
+  }
+
+  .lang-switch button {
+    padding: 4px 9px;
+  }
+
+  .menu-toggle {
+    padding: 6px;
+  }
+}
+
+@media (max-width: 340px) {
+  .logo {
+    font-size: 15px;
+  }
+
+  .lang-switch button {
+    padding: 4px 7px;
   }
 }

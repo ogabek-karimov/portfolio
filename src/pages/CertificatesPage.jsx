@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
+import SectionHeading from '../components/SectionHeading'
 import './SubPage.css'
 
 const API_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
@@ -57,8 +58,7 @@ function CertificatesPage() {
           {certificates.backLink}
         </Link>
 
-        <h1 className="section-title">{certificates.title}</h1>
-        <p className="section-subtitle">{certificates.subtitle}</p>
+        <SectionHeading as="h1" title={certificates.title} subtitle={certificates.subtitle} />
         {items && !isCustom && <p className="placeholder-note">{certificates.note}</p>}
 
         {items && (

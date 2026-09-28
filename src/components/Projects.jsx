@@ -1,47 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
+import { localizeProjects } from '../data/projects'
+import SectionHeading from './SectionHeading'
+import ProjectCard from './ProjectCard'
 import './Projects.css'
-import todoImg from '../assets/project-todo.png'
-import calculatorImg from '../assets/project-calculator.png'
-import weatherImg from '../assets/project-weather.png'
-import chorvabozorImg from '../assets/project-chorvabozor.png'
-
-const projectMeta = [
-  {
-    tags: ['HTML', 'CSS', 'JavaScript'],
-    image: todoImg,
-    demo: '/portfolio/projects/todo-app/',
-    code: 'https://github.com/ogabek-karimov/portfolio/tree/master/public/projects/todo-app',
-  },
-  {
-    tags: ['HTML', 'CSS', 'JavaScript'],
-    image: calculatorImg,
-    demo: '/portfolio/projects/calculator/',
-    code: 'https://github.com/ogabek-karimov/portfolio/tree/master/public/projects/calculator',
-  },
-  {
-    tags: ['JavaScript', 'Fetch API'],
-    image: weatherImg,
-    demo: '/portfolio/projects/weather-app/',
-    code: 'https://github.com/ogabek-karimov/portfolio/tree/master/public/projects/weather-app',
-  },
-  {
-    tags: ['Cloudflare Workers', 'D1', 'React'],
-    image: chorvabozorImg,
-    demo: 'https://chorvabozor.bek8896ok.workers.dev',
-    code: 'https://github.com/ogabek-karimov/livestock-marketplace',
-  },
-  {
-    tags: ['Cloudflare Workers', 'Telegram Bot API', 'Cron'],
-    icon: '🎥',
-    code: 'https://github.com/ogabek-karimov/zoom-elon-bot',
-  },
-  {
-    tags: ['Python', 'aiogram', 'Telegram Mini App'],
-    icon: '📚',
-    code: 'https://github.com/ogabek-karimov/talim-yordamchisi-bot',
-  },
-]
 
 const AUTO_STEP_MS = 3000
 const SLIDE_MS = 700
@@ -56,92 +19,9 @@ function ChevronIcon({ direction }) {
   )
 }
 
-function BotChatMock({ chat, icon }) {
-  return (
-    <div className="project-thumb-placeholder bot-thumb">
-      <div className="chat-mock" aria-hidden="true">
-        <div className="chat-mock-header">
-          <span className="chat-mock-avatar">{icon}</span>
-          <div className="chat-mock-title">
-            <strong>{chat.name}</strong>
-            <span>{chat.status}</span>
-          </div>
-        </div>
-        <div className="chat-mock-body">
-          {chat.chip && <span className="chat-chip">{chat.chip}</span>}
-          {chat.user && (
-            <div className="chat-bubble chat-out chat-step-1">
-              {chat.user}
-              <em className="chat-meta">{chat.time} ✓✓</em>
-            </div>
-          )}
-          <div className="chat-slot">
-            <div className="chat-typing">
-              <i />
-              <i />
-              <i />
-            </div>
-            <div className="chat-bubble chat-in chat-step-2">
-              {chat.reply.map((line) => (
-                <div key={line}>{line}</div>
-              ))}
-              {chat.link && <div className="chat-link">{chat.link}</div>}
-              <em className="chat-meta">{chat.time}</em>
-            </div>
-          </div>
-          {chat.buttons && (
-            <div className="chat-buttons chat-step-3">
-              {chat.buttons.map((b) => (
-                <span key={b}>{b}</span>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function ProjectCard({ project, dict }) {
-  return (
-    <div className="project-card">
-      {project.image ? (
-        <a href={project.demo} target="_blank" rel="noreferrer" className="project-thumb-link">
-          <img src={project.image} alt={project.title} className="project-thumb" draggable={false} />
-        </a>
-      ) : project.chat ? (
-        <BotChatMock chat={project.chat} icon={project.icon} />
-      ) : (
-        <div className="project-thumb-placeholder">
-          <span>{project.icon}</span>
-        </div>
-      )}
-      <div className="project-body">
-        <h3>{project.title}</h3>
-        <p>{project.desc}</p>
-        <div className="project-tags">
-          {project.tags.map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
-        </div>
-        <div className="project-links">
-          {project.demo && (
-            <a href={project.demo} target="_blank" rel="noreferrer" className="btn btn-outline">
-              {dict.projects.liveDemo}
-            </a>
-          )}
-          <a href={project.code} target="_blank" rel="noreferrer" className="btn btn-outline">
-            {dict.projects.github}
-          </a>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function Projects() {
   const { dict } = useLanguage()
-  const projects = projectMeta.map((meta, i) => ({ ...meta, ...dict.projects.items[i] }))
+  const projects = localizeProjects(dict)
   const count = projects.length
   // Three copies so there are always real cards on both sides while dragging or stepping.
   const loopedProjects = [...projects, ...projects, ...projects]
@@ -160,7 +40,10 @@ function Projects() {
   useLayoutEffect(() => {
     function measure() {
       const first = trackRef.current?.children[0]
-      if (first) setStepPx(first.getBoundingClientRect().width + GAP_PX)
+      if (!first) return
+      // new card size: snap into place without the slide transition
+      setAnimate(false)
+      setStepPx(first.getBoundingClientRect().width + GAP_PX)
     }
     measure()
     window.addEventListener('resize', measure)
@@ -276,9 +159,12 @@ function Projects() {
 
   return (
     <section id="projects" className="projects">
-      <div className="container">
-        <h2 className="section-title">{dict.projects.title}</h2>
-        <p className="section-subtitle">{dict.projects.subtitle}</p>
+      <div className="container projects-head">
+        <SectionHeading title={dict.projects.title} subtitle={dict.projects.subtitle} />
+        <Link to="/projects" className="projects-all">
+          {dict.projects.viewAll}
+          <span className="projects-all-arrow" aria-hidden="true" />
+        </Link>
       </div>
 
       <div

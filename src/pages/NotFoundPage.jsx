@@ -28,7 +28,7 @@ function NotFoundPage() {
         <h1>{dict.notFound.title}</h1>
         <h2>{dict.notFound.subtitle}</h2>
         <p>{dict.notFound.desc}</p>
-        <Link to="/" className="btn btn-primary">
+        <Link to="/" className="btn btn-primary not-found-home">
           {dict.notFound.backBtn}
         </Link>
       </div>

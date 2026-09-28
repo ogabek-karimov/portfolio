@@ -1,20 +1,3 @@
-.contact-form {
-  max-width: 600px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.form-row {
-  display: flex;
-  gap: 20px;
-}
-
-.form-row label {
-  flex: 1;
-}
-
 label {
   display: flex;
   flex-direction: column;
@@ -41,17 +24,6 @@ textarea:focus {
   outline-offset: 1px;
 }
 
-.contact-form .btn {
-  align-self: center;
-  border: none;
-  font: inherit;
-}
-
-.contact-form .btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 .hp-field {
   position: absolute;
   left: -9999px;
@@ -60,22 +32,651 @@ textarea:focus {
   opacity: 0;
 }
 
-.form-status {
-  text-align: center;
-  font-size: 14px;
+/* ---------- phone frame ---------- */
+
+.iphone {
+  --frame: #c7b6e6;
+  position: relative;
+  /* never taller than the space under the navbar, so the whole phone fits on screen */
+  height: clamp(520px, calc(100svh - 120px), 680px);
+  aspect-ratio: 330 / 680;
+  margin: 0 auto;
+  padding: 12px;
+  border-radius: 58px;
+  background: #0a0a0c;
+  box-shadow:
+    0 0 0 2px var(--frame),
+    0 0 0 4px color-mix(in srgb, var(--frame) 55%, #2a2140),
+    0 40px 90px -30px color-mix(in srgb, var(--accent) 60%, transparent),
+    0 24px 40px -24px rgba(0, 0, 0, 0.55);
+}
+
+.iphone-key {
+  position: absolute;
+  width: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--frame) 70%, #000), var(--frame));
+}
+
+.iphone-key-action {
+  left: -7px;
+  top: 17.4%;
+  height: 4.4%;
+}
+
+.iphone-key-vol-up {
+  left: -7px;
+  top: 24.7%;
+  height: 7.9%;
+}
+
+.iphone-key-vol-down {
+  left: -7px;
+  top: 34.4%;
+  height: 7.9%;
+}
+
+.iphone-key-power {
+  right: -7px;
+  top: 27.9%;
+  height: 12.6%;
+}
+
+.iphone-key-camera {
+  right: -7px;
+  top: 58.8%;
+  height: 6.5%;
+}
+
+.iphone-screen {
+  --ios-bg: #ffffff;
+  --ios-text: #000000;
+  --ios-muted: #8a8a8e;
+  --ios-sep: rgba(60, 60, 67, 0.18);
+  --ios-in: #e9e9eb;
+  --ios-head: rgba(249, 249, 249, 0.92);
+  --ios-field: rgba(60, 60, 67, 0.3);
+  --ios-blue: #007aff;
+  --ios-red: #ff3b30;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 46px;
+  background: var(--ios-bg);
+  color: var(--ios-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+  isolation: isolate;
+  container-type: size;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .iphone-screen {
+    --ios-bg: #000000;
+    --ios-text: #ffffff;
+    --ios-muted: #8d8d93;
+    --ios-sep: rgba(84, 84, 88, 0.6);
+    --ios-in: #26252a;
+    --ios-head: rgba(22, 22, 24, 0.92);
+    --ios-field: rgba(120, 120, 128, 0.45);
+    --ios-blue: #0a84ff;
+    --ios-red: #ff453a;
+  }
+}
+
+:root[data-theme='dark'] .iphone-screen {
+  --ios-bg: #000000;
+  --ios-text: #ffffff;
+  --ios-muted: #8d8d93;
+  --ios-sep: rgba(84, 84, 88, 0.6);
+  --ios-in: #26252a;
+  --ios-head: rgba(22, 22, 24, 0.92);
+  --ios-field: rgba(120, 120, 128, 0.45);
+  --ios-blue: #0a84ff;
+  --ios-red: #ff453a;
+}
+
+/* sizes follow the screen width (cqw), so a phone shrunk to fit the viewport stays in proportion */
+.iphone-island {
+  position: absolute;
+  top: min(11px, 3.6cqw);
+  left: 50%;
+  z-index: 30;
+  width: 30cqw;
+  height: min(30px, 9.8cqw);
+  border-radius: 20px;
+  background: #000;
+  transform: translateX(-50%);
+}
+
+/* front camera lens at the right end of the island */
+.iphone-island::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 3.3cqw;
+  width: min(11px, 3.6cqw);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  background: radial-gradient(circle at 34% 32%, #8fa2e6 0 7%, #2c3761 20%, #0d1122 52%, #040509 100%);
+  box-shadow:
+    0 0 0 1.5px #15171e,
+    0 0 4px 1px rgba(88, 110, 200, 0.25);
+}
+
+.ios-status {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  padding: 4px 8cqw 0 11cqw;
+  font-size: min(15px, 4.9cqw);
   font-weight: 600;
+  color: var(--ios-text);
+  pointer-events: none;
+  transition: color 0.3s ease;
 }
 
-.form-status.success {
-  color: #4ade80;
+.ios-status-icons {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
 }
 
-.form-status.error {
-  color: #f87171;
+.ios-status-icons svg {
+  width: auto;
+  height: 0.8em;
 }
+
+/* the lock screen shows the big clock instead */
+.iphone:not(.is-open) .ios-status {
+  color: #fff;
+}
+
+.iphone:not(.is-open) .ios-status-time {
+  visibility: hidden;
+}
+
+.iphone-home {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  z-index: 20;
+  width: 124px;
+  height: 5px;
+  margin-left: -62px;
+  border-radius: 3px;
+  background: var(--ios-text);
+  pointer-events: none;
+  transition: background 0.3s ease;
+}
+
+.iphone:not(.is-open) .iphone-home {
+  background: #fff;
+}
+
+/* ---------- lock screen ---------- */
+
+.ios-lock {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 64px 24px 56px;
+  color: #fff;
+  background:
+    radial-gradient(120% 60% at 15% 5%, #c084fc 0%, transparent 60%),
+    radial-gradient(90% 55% at 95% 75%, #7c3aed 0%, transparent 65%),
+    radial-gradient(80% 50% at 0% 100%, #be185d 0%, transparent 60%),
+    #1b0f33;
+  transition: transform 0.55s cubic-bezier(0.3, 0.7, 0.2, 1), opacity 0.45s ease;
+}
+
+.iphone.is-open .ios-lock {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.ios-lock-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ios-lock-date {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.ios-lock-time {
+  font-size: min(88px, 28cqw);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+/* frosted pill; on hover the bubble icon hops like a new message */
+.ios-lock-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(18px);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ios-lock-open:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.ios-lock-open:hover svg {
+  animation: bubble-hop 0.6s ease;
+}
+
+@keyframes bubble-hop {
+  30% {
+    transform: translateY(-5px) rotate(-8deg);
+  }
+  60% {
+    transform: translateY(0) rotate(4deg);
+  }
+}
+
+/* ---------- messages app ---------- */
+
+.ios-app {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--ios-bg);
+  opacity: 0;
+  transform: scale(0.92);
+  transition: transform 0.45s cubic-bezier(0.3, 0.7, 0.2, 1) 0.05s, opacity 0.35s ease 0.05s;
+}
+
+.iphone.is-open .ios-app {
+  opacity: 1;
+  transform: none;
+}
+
+.ios-app-head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 54px 16px 8px;
+  background: var(--ios-head);
+  border-bottom: 0.5px solid var(--ios-sep);
+}
+
+.ios-back {
+  position: absolute;
+  left: 14px;
+  top: 64px;
+  display: flex;
+  padding: 4px;
+  border: none;
+  color: var(--ios-blue);
+  background: none;
+  cursor: pointer;
+}
+
+.ios-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  object-fit: cover;
+  object-position: 50% 9%;
+}
+
+.ios-contact-name {
+  font-size: 12px;
+  color: var(--ios-text);
+}
+
+.ios-form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.ios-from-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--ios-muted);
+  border-bottom: 0.5px solid var(--ios-sep);
+}
+
+.ios-from-row.has-error span {
+  color: var(--ios-red);
+}
+
+.iphone input,
+.iphone textarea {
+  min-width: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  font: inherit;
+  color: var(--ios-text);
+  background: transparent;
+  caret-color: var(--ios-blue);
+  outline: none;
+}
+
+.ios-from-row input {
+  flex: 1;
+  height: 40px;
+}
+
+.iphone input::placeholder,
+.iphone textarea::placeholder {
+  color: var(--ios-muted);
+}
+
+.ios-thread {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  padding: 10px 12px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.ios-thread::-webkit-scrollbar {
+  display: none;
+}
+
+.ios-stamp {
+  margin: 2px 0 8px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--ios-muted);
+}
+
+.ios-bubble {
+  max-width: 78%;
+  padding: 7px 12px;
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.3;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ios-bubble.is-in {
+  align-self: flex-start;
+  color: var(--ios-text);
+  background: var(--ios-in);
+  border-bottom-left-radius: 6px;
+}
+
+.ios-bubble.is-new {
+  animation: bubble-in 0.3s ease;
+}
+
+.ios-out {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  align-self: flex-end;
+  max-width: 82%;
+  margin-top: 4px;
+}
+
+.ios-out-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+}
+
+.ios-bubble.is-out {
+  max-width: 100%;
+  color: #fff;
+  background: var(--ios-blue);
+  border-bottom-right-radius: 6px;
+  animation: bubble-send 0.4s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.ios-out.is-failed .ios-bubble {
+  opacity: 0.7;
+}
+
+.ios-fail-icon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ios-red);
+}
+
+.ios-receipt {
+  margin: 3px 4px 2px;
+  font-size: 11px;
+  color: var(--ios-muted);
+  text-align: right;
+}
+
+.ios-receipt.is-failed {
+  color: var(--ios-red);
+}
+
+.ios-receipt button {
+  padding: 0;
+  border: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ios-blue);
+  background: none;
+  cursor: pointer;
+}
+
+.ios-typing {
+  display: flex;
+  gap: 4px;
+  padding: 12px 14px;
+}
+
+.ios-typing i {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--ios-muted);
+  animation: typing-dot 1.2s ease-in-out infinite;
+}
+
+.ios-typing i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.ios-typing i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.ios-error {
+  margin: 0 16px 4px;
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--ios-red);
+}
+
+.ios-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 6px 16px 30px;
+}
+
+.ios-plus {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ios-muted);
+  background: var(--ios-in);
+}
+
+.ios-input {
+  display: flex;
+  flex: 1;
+  /* let the field shrink on narrow screens instead of keeping the textarea's default width */
+  min-width: 0;
+  align-items: flex-end;
+  gap: 6px;
+  min-height: 34px;
+  padding: 3px 3px 3px 12px;
+  border: 1px solid var(--ios-field);
+  border-radius: 18px;
+}
+
+.ios-input.has-error {
+  border-color: var(--ios-red);
+}
+
+.ios-input textarea {
+  flex: 1;
+  max-height: 96px;
+  padding: 4px 0;
+  font-size: 15px;
+  line-height: 20px;
+  resize: none;
+}
+
+.ios-send {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--ios-blue);
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+.ios-send:hover:not(:disabled) {
+  transform: scale(1.1);
+}
+
+.ios-send:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+@keyframes bubble-send {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.85);
+  }
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+  }
+}
+
+@keyframes typing-dot {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ios-lock,
+  .ios-app {
+    transition: none;
+  }
+
+  .ios-bubble,
+  .ios-typing i,
+  .ios-lock-open:hover svg {
+    animation: none !important;
+  }
+}
+
+/* ---------- phones: no frame, just the chat ---------- */
 
 @media (max-width: 600px) {
-  .form-row {
-    flex-direction: column;
+  .iphone {
+    width: 100%;
+    height: min(560px, calc(100svh - 110px));
+    aspect-ratio: auto;
+    padding: 0;
+    border-radius: 22px;
+    background: none;
+    box-shadow: var(--shadow);
+  }
+
+  .iphone-key,
+  .iphone-island,
+  .ios-status,
+  .iphone-home,
+  .ios-lock {
+    display: none;
+  }
+
+  .iphone-screen {
+    border: 1px solid var(--border);
+    border-radius: 22px;
+  }
+
+  .ios-app-head {
+    padding-top: 14px;
+  }
+
+  .ios-composer {
+    padding-bottom: 12px;
   }
 }

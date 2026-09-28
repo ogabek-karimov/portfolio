@@ -56,14 +56,14 @@ const DEFAULT_CONTENT = {
       role: 'Frontend Developer',
       about:
         "Frontend dasturchiman, foydalanuvchi uchun qulay va chiroyli interfeyslar yarataman. HTML, CSS va JavaScript asosida boshlab, hozirda React kutubxonasi bilan ishlayman va Node.js yordamida loyihalarni yig'ish (build) va server tomonini ham o'rganib bormoqdaman.",
-      skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Node.js', 'Git / GitHub'],
+      skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Figma', 'Photoshop', 'Node.js', 'Python', 'Telegram botlar', 'Git / GitHub'],
     },
     ru: {
       name: 'Огабек Каримов',
       role: 'Frontend-разработчик',
       about:
         'Я frontend-разработчик, создаю удобные и красивые интерфейсы для пользователей. Начав с HTML, CSS и JavaScript, сейчас работаю с библиотекой React, а также изучаю сборку проектов и серверную часть с помощью Node.js.',
-      skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Node.js', 'Git / GitHub'],
+      skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Figma', 'Photoshop', 'Node.js', 'Python', 'Telegram-боты', 'Git / GitHub'],
     },
   },
 }

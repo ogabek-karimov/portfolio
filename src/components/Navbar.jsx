@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import { useTheme } from '../theme/ThemeContext'
 import { useAdminAuth } from '../admin/AdminAuthContext'
+import { scrollToTop } from '../utils/scroll'
 import './Navbar.css'
 
 function Navbar() {
@@ -21,6 +22,14 @@ function Navbar() {
     setOpen(false)
   }, [location])
 
+  // a menu opened on a phone-sized window must not stay open after resizing
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 768px)')
+    const close = () => setOpen(false)
+    mql.addEventListener('change', close)
+    return () => mql.removeEventListener('change', close)
+  }, [])
+
   useEffect(() => {
     function handleClickOutside(e) {
       if (profileRef.current && !profileRef.current.contains(e.target)) {
@@ -30,6 +39,18 @@ function Navbar() {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  // The logo always brings you to the top of the home page.
+  function handleLogoClick(e) {
+    setOpen(false)
+    if (location.pathname === '/') {
+      e.preventDefault()
+      if (location.hash) navigate('/', { replace: true })
+      scrollToTop()
+    } else {
+      window.scrollTo(0, 0)
+    }
+  }
 
   function handleLogout() {
     logout()
@@ -51,7 +72,7 @@ function Navbar() {
   return (
     <header className="navbar">
       <div className="container navbar-inner">
-        <Link to="/" className="logo-link">
+        <Link to="/" className="logo-link" onClick={handleLogoClick}>
           <span className="logo">Og'abek Karimov</span>
           <span className="logo-subtitle">Frontend Developer</span>
         </Link>

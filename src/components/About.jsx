@@ -1,30 +1,47 @@
-import profilePhoto from "../assets/profile.jpg";
-import { useLanguage } from "../i18n/LanguageContext";
-import "./About.css";
+import profilePhoto from '../assets/profile.jpg'
+import { useLanguage } from '../i18n/LanguageContext'
+import SectionHeading from './SectionHeading'
+import './About.css'
+
+const TECH_RE = /(HTML|CSS|JavaScript|React|Node\.js)/g
+
+// Paint technology names in the accent color, the way an editor highlights keywords.
+function highlightTech(text) {
+  return text.split(TECH_RE).map((part, i) =>
+    i % 2 === 1 ? (
+      <span className="about-kw" key={i}>
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  )
+}
 
 function About() {
-  const { dict } = useLanguage();
+  const { dict } = useLanguage()
 
   return (
-    <section id='about' className='about'>
-      <div className='container about-inner'>
-        <div className='about-photo'>
-          <img
-            src={profilePhoto}
-            alt="Og'abek Karimov"
-            className='about-photo-inner'
-          />
-        </div>
-        <div className='about-content'>
-          <h2 className='section-title' style={{ textAlign: "left" }}>
-            {dict.about.title}
-          </h2>
-          <p>{dict.about.p1}</p>
-          <p>{dict.about.p2}</p>
+    <section id="about" className="about">
+      <div className="container">
+        <SectionHeading title={dict.about.title} boxed />
+
+        <div className="about-grid">
+          <figure className="about-photo">
+            <img src={profilePhoto} alt="Og'abek Karimov" />
+          </figure>
+
+          <div className="about-card">
+            <span className="code-tag">&lt;p&gt;</span>
+            <h3 className="about-hello">{dict.about.hello}</h3>
+            <p>{highlightTech(dict.about.p1)}</p>
+            <p>{highlightTech(dict.about.p2)}</p>
+            <span className="code-tag">&lt;/p&gt;</span>
+          </div>
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default About;
+export default About

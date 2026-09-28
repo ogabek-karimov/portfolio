@@ -25,13 +25,31 @@
 
 .resume-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
+  gap: 12px 16px;
 }
 
 .resume-actions .btn {
   border: none;
   font: inherit;
+  white-space: nowrap;
+}
+
+.resume-print-btn:hover .print-sheet {
+  animation: sheet-feed 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes sheet-feed {
+  to {
+    transform: translateY(2.5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resume-print-btn:hover .print-sheet {
+    animation: none;
+  }
 }
 
 .resume-pdf-link {

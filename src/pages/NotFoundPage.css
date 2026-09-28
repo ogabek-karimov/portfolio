@@ -83,3 +83,26 @@
   font-size: 15px;
   color: var(--text);
 }
+
+.not-found-home {
+  overflow: visible;
+}
+
+.not-found-home:hover {
+  animation: ring-ripple 1.2s ease-out infinite;
+}
+
+@keyframes ring-ripple {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 16px transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .not-found-home:hover {
+    animation: none;
+  }
+}

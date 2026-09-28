@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
+import SectionHeading from '../components/SectionHeading'
 import './SubPage.css'
 
 const API_URL = 'https://portfolio-contact-relay.bek8896ok.workers.dev'
@@ -40,8 +41,7 @@ function ExperiencePage() {
           {experience.backLink}
         </Link>
 
-        <h1 className="section-title">{experience.title}</h1>
-        <p className="section-subtitle">{experience.subtitle}</p>
+        <SectionHeading as="h1" title={experience.title} subtitle={experience.subtitle} />
 
         {items && (
           <div className="timeline">

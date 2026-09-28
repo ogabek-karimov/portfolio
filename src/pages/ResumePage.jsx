@@ -16,14 +16,14 @@ const DEFAULT_RESUME = {
     role: 'Frontend Developer',
     about:
       "Frontend dasturchiman, foydalanuvchi uchun qulay va chiroyli interfeyslar yarataman. HTML, CSS va JavaScript asosida boshlab, hozirda React kutubxonasi bilan ishlayman va Node.js yordamida loyihalarni yig'ish (build) va server tomonini ham o'rganib bormoqdaman.",
-    skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Node.js', 'Git / GitHub'],
+    skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Figma', 'Photoshop', 'Node.js', 'Python', 'Telegram botlar', 'Git / GitHub'],
   },
   ru: {
     name: 'Огабек Каримов',
     role: 'Frontend-разработчик',
     about:
       'Я frontend-разработчик, создаю удобные и красивые интерфейсы для пользователей. Начав с HTML, CSS и JavaScript, сейчас работаю с библиотекой React, а также изучаю сборку проектов и серверную часть с помощью Node.js.',
-    skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Node.js', 'Git / GitHub'],
+    skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Figma', 'Photoshop', 'Node.js', 'Python', 'Telegram-боты', 'Git / GitHub'],
   },
 }
 
@@ -106,7 +106,12 @@ function ResumePage() {
           {t.backLink}
         </Link>
         <div className="resume-actions">
-          <button type="button" className="btn btn-primary" onClick={() => window.print()}>
+          <button type="button" className="btn btn-primary resume-print-btn" onClick={() => window.print()}>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M7 9V3h10v6" />
+              <path d="M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2" />
+              <path className="print-sheet" d="M7 14h10v7H7z" />
+            </svg>
             {t.print}
           </button>
           <a href={`${API_URL}/resume.pdf`} className="resume-pdf-link">
