@@ -33,9 +33,9 @@ function About() {
 
           <div className="about-card">
             <span className="code-tag">&lt;p&gt;</span>
-            <h3 className="about-hello">{dict.about.hello}</h3>
             <p>{highlightTech(dict.about.p1)}</p>
             <p>{highlightTech(dict.about.p2)}</p>
+            <p>{highlightTech(dict.about.p3)}</p>
             <span className="code-tag">&lt;/p&gt;</span>
           </div>
         </div>

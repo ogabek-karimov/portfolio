@@ -108,6 +108,24 @@ function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {/* phones: the admin links live in the menu instead of a profile icon in the bar */}
+          {isAdmin && (
+            <div className="nav-admin">
+              <Link to="/admin" onClick={() => setOpen(false)}>
+                Admin panel
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false)
+                  handleLogout()
+                }}
+              >
+                Chiqish
+              </button>
+            </div>
+          )}
         </nav>
 
         <div className="navbar-right">

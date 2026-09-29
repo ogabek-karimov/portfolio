@@ -58,14 +58,6 @@
   box-shadow: var(--shadow);
 }
 
-.about-hello {
-  margin: 12px 0 4px;
-  font-family: var(--mono);
-  font-size: 28px;
-  font-weight: 500;
-  color: var(--accent);
-}
-
 .about-card p {
   margin-top: 14px;
   font-family: var(--mono);
@@ -101,22 +93,14 @@
     padding: 22px 20px;
   }
 
-  .about-hello {
-    font-size: 24px;
-  }
-
   .about-card p {
     font-size: 13.5px;
   }
 }
 
+/* phones: the portrait already sits in the hero card, so it is not repeated here */
 @media (max-width: 600px) {
-  .about-grid {
-    gap: 36px;
-  }
-
   .about-photo {
-    width: 200px;
-    aspect-ratio: 3 / 4;
+    display: none;
   }
 }

@@ -37,6 +37,7 @@
     --accent-2: #7c3aed;
     --shadow: rgba(0, 0, 0, 0.4) 0 10px 30px -10px;
     --grid-line: rgba(255, 255, 255, 0.035);
+    color-scheme: dark;
   }
 }
 
@@ -51,6 +52,11 @@
   --accent-2: #7c3aed;
   --shadow: rgba(0, 0, 0, 0.4) 0 10px 30px -10px;
   --grid-line: rgba(255, 255, 255, 0.035);
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
 }
 
 * {

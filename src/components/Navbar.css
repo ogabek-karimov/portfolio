@@ -216,7 +216,8 @@
   }
 
   .logo-subtitle {
-    display: none;
+    font-size: 9px;
+    letter-spacing: 0.14em;
   }
 
   .nav-links {
@@ -291,5 +292,39 @@
 @media (max-width: 340px) {
   .logo {
     font-size: 15px;
+  }
+}
+
+.nav-admin {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .profile-menu {
+    display: none;
+  }
+
+  .nav-admin {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .nav-admin a,
+  .nav-admin button {
+    padding: 0;
+    border: none;
+    font: inherit;
+    font-weight: 500;
+    color: var(--text);
+    text-align: left;
+    background: none;
+    cursor: pointer;
+  }
+
+  .nav-admin a {
+    color: var(--accent);
   }
 }
