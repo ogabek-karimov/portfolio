@@ -1,7 +1,31 @@
 .services {
+  --services-glow: 1;
   position: relative;
   overflow: hidden;
   background: var(--bg-alt);
+}
+
+/* light theme: soft colour behind the glass cards, so the frosting has something to diffuse */
+.services::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(38% 32% at 24% 48%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
+    radial-gradient(34% 30% at 76% 72%, color-mix(in srgb, #f472b6 24%, transparent), transparent 70%),
+    radial-gradient(30% 26% at 70% 30%, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 70%);
+  opacity: var(--services-glow);
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .services {
+    --services-glow: 0;
+  }
+}
+
+:root[data-theme='dark'] .services {
+  --services-glow: 0;
 }
 
 .services .container {
@@ -16,17 +40,68 @@
   margin: 0 auto;
 }
 
+/* light theme: frosted glass over the moving circuit, with a gradient rim.
+   The dark theme swaps these values back to a solid card below. */
 .service-card {
+  --card-bg: color-mix(in srgb, #fff 52%, transparent);
+  --card-border: transparent;
+  --card-blur: blur(12px) saturate(1.4);
+  --card-shadow: 0 18px 40px -22px rgba(76, 29, 149, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --card-rim: 1;
+  --icon-bg: linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, #fff), color-mix(in srgb, #f472b6 16%, #fff));
+
   position: relative;
   display: flex;
   flex-direction: column;
   padding: 28px 28px 24px;
   overflow: hidden;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 18px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
   transition: scale 0.3s ease, translate 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* purple-to-pink rim: a 1px ring cut out of a gradient, since a translucent card cannot use border-image */
+.service-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 90%, transparent),
+    color-mix(in srgb, #f472b6 75%, transparent) 50%,
+    color-mix(in srgb, var(--accent-2) 85%, transparent)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: var(--card-rim);
+  pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .service-card {
+    --card-bg: var(--surface);
+    --card-border: var(--border);
+    --card-blur: none;
+    --card-shadow: var(--shadow);
+    --card-rim: 0;
+    --icon-bg: color-mix(in srgb, var(--accent) 14%, transparent);
+  }
+}
+
+:root[data-theme='dark'] .service-card {
+  --card-bg: var(--surface);
+  --card-border: var(--border);
+  --card-blur: none;
+  --card-shadow: var(--shadow);
+  --card-rim: 0;
+  --icon-bg: color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
 /* mouse only: the hovered card grows and lifts while the others step back */
@@ -76,7 +151,7 @@
   height: 48px;
   border-radius: 14px;
   color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  background: var(--icon-bg);
   transition: background 0.3s ease, color 0.3s ease;
 }
 

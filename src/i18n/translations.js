@@ -3,6 +3,7 @@ const translations = {
     nav: {
       about: 'Men haqimda',
       skills: "Ko'nikmalar",
+      services: 'Xizmatlar',
       projects: 'Loyihalar',
       experience: 'Ta\'lim va tajriba',
       certificates: 'Sertifikatlar',
@@ -285,6 +286,7 @@ const translations = {
     nav: {
       about: 'О себе',
       skills: 'Навыки',
+      services: 'Услуги',
       projects: 'Проекты',
       experience: 'Образование и опыт',
       certificates: 'Сертификаты',
@@ -566,6 +568,7 @@ const translations = {
     nav: {
       about: 'About',
       skills: 'Skills',
+      services: 'Services',
       projects: 'Projects',
       experience: 'Education & experience',
       certificates: 'Certificates',

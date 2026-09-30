@@ -4,6 +4,7 @@ import { localizeProjects } from '../data/projects'
 import useDocumentTitle from '../hooks/useDocumentTitle'
 import SectionHeading from '../components/SectionHeading'
 import ProjectCard from '../components/ProjectCard'
+import ProjectsBackdrop from '../components/ProjectsBackdrop'
 import './SubPage.css'
 
 function ProjectsPage() {
@@ -12,7 +13,8 @@ function ProjectsPage() {
   const projects = localizeProjects(dict)
 
   return (
-    <section className="subpage">
+    <section className="subpage subpage-projects">
+      <ProjectsBackdrop />
       <div className="container">
         <Link to="/" className="back-link">
           {dict.projects.backLink}

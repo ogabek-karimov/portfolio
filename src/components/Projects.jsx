@@ -4,6 +4,7 @@ import { useLanguage } from '../i18n/LanguageContext'
 import { localizeProjects } from '../data/projects'
 import SectionHeading from './SectionHeading'
 import ProjectCard from './ProjectCard'
+import ProjectsBackdrop from './ProjectsBackdrop'
 import './Projects.css'
 
 const AUTO_STEP_MS = 3000
@@ -159,6 +160,7 @@ function Projects() {
 
   return (
     <section id="projects" className="projects">
+      <ProjectsBackdrop />
       <div className="container projects-head">
         <SectionHeading title={dict.projects.title} subtitle={dict.projects.subtitle} />
         <Link to="/projects" className="projects-all">

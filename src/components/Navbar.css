@@ -211,13 +211,16 @@
 }
 
 @media (max-width: 768px) {
-  .menu-toggle {
-    display: flex;
-  }
-
   .logo-subtitle {
     font-size: 9px;
     letter-spacing: 0.14em;
+  }
+}
+
+/* five section links need more room than tablets have: they move into the menu */
+@media (max-width: 960px) {
+  .menu-toggle {
+    display: flex;
   }
 
   .nav-links {

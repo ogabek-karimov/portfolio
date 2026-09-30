@@ -25,7 +25,7 @@ function Navbar() {
 
   // a menu opened on a phone-sized window must not stay open after resizing
   useEffect(() => {
-    const mql = window.matchMedia('(max-width: 768px)')
+    const mql = window.matchMedia('(max-width: 960px)')
     const close = () => setOpen(false)
     mql.addEventListener('change', close)
     return () => mql.removeEventListener('change', close)
@@ -61,6 +61,7 @@ function Navbar() {
 
   const sectionLinks = [
     { href: '/#skills', label: dict.nav.skills },
+    { href: '/#services', label: dict.nav.services },
     { href: '/#projects', label: dict.nav.projects },
     { href: '/#contact', label: dict.nav.contact },
   ]

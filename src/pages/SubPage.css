@@ -233,3 +233,12 @@
     grid-template-columns: 1fr;
   }
 }
+
+.subpage-projects {
+  position: relative;
+  overflow: hidden;
+}
+
+.subpage-projects > .container {
+  position: relative;
+}
