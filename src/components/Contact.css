@@ -34,6 +34,69 @@ textarea:focus {
 
 .contact {
   background: var(--bg-alt);
+  /* the side code runs toward the edges; never let it widen the page */
+  overflow-x: clip;
+}
+
+/* ---------- faint code beside the phone ---------- */
+
+.contact-stage {
+  --phone-h: clamp(520px, calc(100svh - 120px), 680px);
+  --phone-w: calc(var(--phone-h) * 330 / 680);
+  position: relative;
+}
+
+.contact-code {
+  position: absolute;
+  top: 50%;
+  z-index: 0;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--text-h);
+  white-space: pre;
+  opacity: 0.16;
+  transform: translateY(-50%);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* whole lines stay readable; the blocks only fade out at the top and bottom */
+.contact-code {
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+}
+
+.contact-code-request {
+  right: calc(50% + var(--phone-w) / 2 + 56px);
+}
+
+.contact-code-response {
+  left: calc(50% + var(--phone-w) / 2 + 56px);
+}
+
+.code-kw {
+  color: var(--accent);
+}
+
+.code-str {
+  color: color-mix(in srgb, var(--accent) 55%, var(--text-h));
+}
+
+.code-cm {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* not enough room beside the phone */
+@media (max-width: 1080px) {
+  .contact-code {
+    display: none;
+  }
+}
+
+.contact-stage .iphone {
+  z-index: 1;
 }
 
 /* ---------- phone frame ---------- */
@@ -42,7 +105,7 @@ textarea:focus {
   --frame: #c7b6e6;
   position: relative;
   /* never taller than the space under the navbar, so the whole phone fits on screen */
-  height: clamp(520px, calc(100svh - 120px), 680px);
+  height: var(--phone-h, clamp(520px, calc(100svh - 120px), 680px));
   aspect-ratio: 330 / 680;
   margin: 0 auto;
   padding: 12px;
@@ -58,8 +121,39 @@ textarea:focus {
 .iphone-key {
   position: absolute;
   width: 4px;
+  padding: 0;
+  border: none;
   border-radius: 2px;
   background: linear-gradient(90deg, color-mix(in srgb, var(--frame) 70%, #000), var(--frame));
+  cursor: pointer;
+  appearance: none;
+  transition: filter 0.15s ease, translate 0.1s ease;
+}
+
+/* the keys are only 4px wide: a wider invisible area makes them easy to hit */
+.iphone-key::before {
+  content: '';
+  position: absolute;
+  inset: -4px -10px;
+}
+
+.iphone-key:hover {
+  filter: brightness(1.3);
+}
+
+.iphone-key:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* a press pushes the key into the frame */
+.iphone-key:active {
+  translate: 1.5px 0;
+}
+
+.iphone-key-power:active,
+.iphone-key-camera:active {
+  translate: -1.5px 0;
 }
 
 .iphone-key-action {
@@ -149,9 +243,49 @@ textarea:focus {
   z-index: 30;
   width: 30cqw;
   height: min(30px, 9.8cqw);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
   border-radius: 20px;
   background: #000;
   transform: translateX(-50%);
+  transition: width 0.35s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+/* the island stretches to announce silent / ring, like iOS */
+.iphone-island.is-expanded {
+  width: 52cqw;
+}
+
+.iphone-island.is-expanded::after {
+  opacity: 0;
+}
+
+.island-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 4cqw;
+  font-size: min(12px, 4cqw);
+  font-weight: 600;
+  color: #fff;
+  animation: island-hud-in 0.3s ease 0.1s both;
+}
+
+.island-hud svg {
+  width: min(16px, 5.2cqw);
+  height: min(16px, 5.2cqw);
+}
+
+.island-hud.is-silent svg {
+  color: #ff453a;
+}
+
+@keyframes island-hud-in {
+  from {
+    opacity: 0;
+  }
 }
 
 /* front camera lens at the right end of the island */
@@ -164,6 +298,7 @@ textarea:focus {
   aspect-ratio: 1;
   border-radius: 999px;
   transform: translateY(-50%);
+  transition: opacity 0.2s ease;
   background: radial-gradient(circle at 34% 32%, #8fa2e6 0 7%, #2c3761 20%, #0d1122 52%, #040509 100%);
   box-shadow:
     0 0 0 1.5px #15171e,
@@ -183,7 +318,130 @@ textarea:focus {
   font-weight: 600;
   color: var(--ios-text);
   pointer-events: none;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, opacity 0.2s ease;
+}
+
+.iphone.has-island .ios-status {
+  opacity: 0;
+}
+
+/* ---------- volume bar, screen off, camera alert ---------- */
+
+.ios-volume {
+  position: absolute;
+  top: 22%;
+  left: 3cqw;
+  z-index: 24;
+  width: min(11px, 3.6cqw);
+  height: 26%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(40, 40, 44, 0.55);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.ios-volume.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.ios-volume-fill {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #fff;
+  transition: height 0.15s ease;
+}
+
+.ios-screen-off {
+  position: absolute;
+  inset: 0;
+  z-index: 28;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+.ios-screen-off.is-on {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ios-alert-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 26;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  animation: ios-fade-in 0.2s ease;
+}
+
+.ios-alert {
+  width: 72%;
+  overflow: hidden;
+  border-radius: 14px;
+  text-align: center;
+  color: var(--ios-text);
+  background: color-mix(in srgb, var(--ios-in) 94%, transparent);
+  backdrop-filter: blur(20px);
+  animation: ios-alert-in 0.25s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.ios-alert-title {
+  margin: 18px 16px 4px;
+  font-size: min(15px, 4.9cqw);
+  font-weight: 600;
+}
+
+.ios-alert-text {
+  margin: 0 16px 16px;
+  font-size: min(13px, 4.2cqw);
+  line-height: 1.35;
+}
+
+.ios-alert-ok {
+  width: 100%;
+  padding: 11px 0;
+  border: none;
+  border-top: 0.5px solid var(--ios-sep);
+  font: inherit;
+  font-size: min(16px, 5.2cqw);
+  font-weight: 600;
+  color: var(--ios-blue);
+  background: none;
+  cursor: pointer;
+}
+
+.ios-alert-ok:hover {
+  background: rgba(127, 127, 127, 0.12);
+}
+
+.ios-alert-ok:focus-visible {
+  outline: 2px solid var(--ios-blue);
+  outline-offset: -2px;
+}
+
+@keyframes ios-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* iOS alerts settle in from slightly larger */
+@keyframes ios-alert-in {
+  from {
+    opacity: 0;
+    transform: scale(1.12);
+  }
 }
 
 .ios-status-icons {
@@ -255,10 +513,13 @@ textarea:focus {
   align-items: center;
 }
 
+/* one centered line in every language ("Wednesday, September 30" is the longest) */
 .ios-lock-date {
   margin-top: 10px;
-  font-size: 18px;
+  font-size: min(18px, 5.4cqw);
   font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
   opacity: 0.9;
 }
 
@@ -638,8 +899,17 @@ textarea:focus {
 
 @media (prefers-reduced-motion: reduce) {
   .ios-lock,
-  .ios-app {
+  .ios-app,
+  .iphone-island,
+  .ios-volume,
+  .ios-screen-off {
     transition: none;
+  }
+
+  .ios-alert,
+  .ios-alert-backdrop,
+  .island-hud {
+    animation: none;
   }
 
   .ios-bubble,
