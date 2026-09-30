@@ -144,7 +144,8 @@ async function handleContactForm(request, env, headers) {
   const text = [
     'Yangi xabar — portfolio saytidan',
     `Ism: ${name.trim()}`,
-    `Telefon: ${phone.trim()}`,
+    // digits only, so Telegram turns it into a tap-to-call link
+    `Telefon: ${phone.replace(/[\s()-]/g, '')}`,
     `Til: ${CONTACT_LANGS[lang]}`,
     `Xabar: ${message.trim()}`,
   ].join('\n')

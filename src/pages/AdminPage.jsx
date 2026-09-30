@@ -363,7 +363,7 @@ function AdminPage() {
                 {t.phoneLabel}
                 <input
                   type="tel"
-                  placeholder="+998901234567"
+                  placeholder="+998XXXXXXXXX"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   required
