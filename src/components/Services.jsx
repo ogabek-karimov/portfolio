@@ -1,5 +1,6 @@
 import { useLanguage } from '../i18n/LanguageContext'
 import SectionHeading from './SectionHeading'
+import ServicesBackdrop from './ServicesBackdrop'
 import './Services.css'
 
 // One outline icon per service, in the same order as dict.services.items.
@@ -16,6 +17,7 @@ function Services() {
 
   return (
     <section id="services" className="services">
+      <ServicesBackdrop />
       <div className="container">
         <SectionHeading title={t.title} subtitle={t.subtitle} />
 

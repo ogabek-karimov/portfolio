@@ -1,0 +1,127 @@
+.services-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  /* busiest at the sides, calm behind the heading and cards in the middle */
+  mask-image: radial-gradient(ellipse 58% 70% at 50% 45%, rgba(0, 0, 0, 0.35), #000 100%);
+}
+
+.sb-circuit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.sb-trace {
+  fill: none;
+  stroke: color-mix(in srgb, var(--accent) 38%, transparent);
+  stroke-width: 1.1;
+}
+
+/* a short bright dash runs along the trace, like a signal on the board */
+.sb-pulse {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 38 1000;
+  stroke-dashoffset: 1038;
+  filter: drop-shadow(0 0 4px var(--accent));
+  animation: sb-flow var(--speed) linear var(--delay) infinite;
+}
+
+.sb-node {
+  fill: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.sb-node.is-live {
+  fill: var(--accent);
+  filter: drop-shadow(0 0 5px var(--accent));
+  animation: sb-glow 3s ease-in-out var(--delay) infinite;
+}
+
+/* faint code that types itself out, holds, and backspaces away */
+.sb-line {
+  position: absolute;
+  font-family: var(--mono);
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.32;
+  white-space: nowrap;
+}
+
+.sb-text {
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+  vertical-align: bottom;
+  border-right: 2px solid transparent;
+  animation:
+    sb-type 7s var(--delay) infinite,
+    sb-caret 0.7s steps(1) infinite;
+}
+
+@keyframes sb-type {
+  0% {
+    width: 0;
+    animation-timing-function: steps(var(--n));
+  }
+  38% {
+    width: calc(var(--n) * 1ch);
+  }
+  72% {
+    width: calc(var(--n) * 1ch);
+    animation-timing-function: steps(var(--n));
+  }
+  90%,
+  100% {
+    width: 0;
+  }
+}
+
+@keyframes sb-caret {
+  50% {
+    border-right-color: currentColor;
+  }
+}
+
+@keyframes sb-flow {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes sb-glow {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-pulse {
+    display: none;
+  }
+
+  .sb-node.is-live,
+  .sb-text {
+    animation: none;
+  }
+
+  .sb-text {
+    width: auto;
+  }
+}
+
+/* phones: the traces stay, fewer lines of code */
+@media (max-width: 700px) {
+  .sb-line:nth-child(n + 6) {
+    display: none;
+  }
+
+  .sb-line {
+    font-size: 12px !important;
+  }
+}
