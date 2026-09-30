@@ -531,15 +531,18 @@ textarea:focus {
 }
 
 /* frosted pill; on hover the bubble icon hops like a new message */
+/* one line in every language ("Написать сообщение" is the longest); shrinks with the phone */
 .ios-lock-open {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 22px;
+  gap: min(8px, 2.4cqw);
+  max-width: 100%;
+  padding: 12px min(22px, 6cqw);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 999px;
   font: inherit;
-  font-size: 15px;
+  font-size: min(15px, 4.8cqw);
+  white-space: nowrap;
   font-weight: 600;
   color: #fff;
   background: rgba(255, 255, 255, 0.18);
